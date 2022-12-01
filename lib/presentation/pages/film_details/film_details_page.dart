@@ -41,6 +41,10 @@ class FilmDetailsPage extends StatelessWidget {
             const RSizedBox(height: 20),
             const _UserReviews(),
             const RSizedBox(height: 20),
+            const _CriticReviews(),
+            const RSizedBox(height: 20),
+            const _GuideOfParents(),
+            const RSizedBox(height: 20),
             const FilmsMainCard("More drama picks"),
             const RSizedBox(height: 20),
             const FilmsMainCard("More from Tom Cruise (Actor)"),
@@ -411,6 +415,162 @@ class _UserReviews extends StatelessWidget {
                 itemCount: 10),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CriticReviews extends StatelessWidget {
+  const _CriticReviews();
+
+  @override
+  Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenHeight = screenSize.height;
+
+    return FloatingContainer(
+      height: screenHeight / 3.2,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const GoldTitleOfMainCard(
+              title: "Critic reviews", withoutSeeAll: true),
+          const RSizedBox(height: 10),
+          Padding(
+            padding: REdgeInsets.symmetric(horizontal: _horizontalPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Metacritic", style: getNormalStyle(fontSize: 17)),
+                Padding(
+                  padding: REdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    children: [
+                      Container(
+                          height: 25.h, width: 25.w, color: ColorManager.green),
+                      const RSizedBox(width: 5),
+                      Text("Metascore (based on 63 reviews)",
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: getNormalStyle(
+                              fontSize: 15, color: ColorManager.black54)),
+                    ],
+                  ),
+                ),
+                Text("4 wins & 16 nominations " * 5,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: getNormalStyle(
+                        fontSize: 15, color: ColorManager.black54)),
+                const RSizedBox(height: 15),
+                Padding(
+                  padding: REdgeInsets.symmetric(vertical: 5),
+                  child: Text("Critic reviews",
+                      style: getNormalStyle(fontSize: 17)),
+                ),
+                Text("4 wins & 16 nominations " * 5,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: getNormalStyle(
+                        fontSize: 15, color: ColorManager.black54)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GuideOfParents extends StatefulWidget {
+  const _GuideOfParents();
+
+  @override
+  State<_GuideOfParents> createState() => _GuideOfParentsState();
+}
+
+class _GuideOfParentsState extends State<_GuideOfParents> {
+  bool flipList = false;
+  @override
+  Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenHeight = screenSize.height;
+
+    return FloatingContainer(
+      height: flipList ? screenHeight / 3.8 : screenHeight / 1.7,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const GoldTitleOfMainCard(title: "Parents'Guide"),
+          const RSizedBox(height: 10),
+          Padding(
+            padding: REdgeInsets.symmetric(
+                horizontal: _horizontalPadding, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Content Rating", style: getNormalStyle(fontSize: 17)),
+                Text("Rated PG-13 for sequences of intense action, and " * 5,
+                    softWrap: true,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: getNormalStyle(
+                        fontSize: 15, color: ColorManager.black54)),
+                const RSizedBox(height: 10),
+                if (!flipList) ..._flagsList(),
+                const RSizedBox(height: 15),
+                Center(
+                    child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            flipList = !flipList;
+                          });
+                        },
+                        child: Icon(flipList
+                            ? Icons.keyboard_arrow_down
+                            : Icons.keyboard_arrow_up)))
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _flagsList() {
+    return List.generate(
+      5,
+      (index) => Padding(
+        padding: REdgeInsets.symmetric(vertical: 10, horizontal: 5),
+        child: Row(
+          children: [
+            Container(
+              height: 30,
+              width: 15,
+              decoration: BoxDecoration(
+                  color: ColorManager.green,
+                  borderRadius: BorderRadius.circular(2)),
+            ),
+            const RSizedBox(width: 5),
+            Text.rich(
+              TextSpan(
+                children: <TextSpan>[
+                  TextSpan(
+                      text: "Sex and nudity:",
+                      style: getNormalStyle(fontSize: 15)),
+                  TextSpan(
+                    style:
+                        getNormalStyle(fontSize: 15, color: ColorManager.grey),
+                    text: " None",
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
