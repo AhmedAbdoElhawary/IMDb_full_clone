@@ -7,9 +7,14 @@ const double _horizontalPadding = 15;
 
 class GoldTitleOfMainCard extends StatelessWidget {
   final bool withoutVerticalPadding;
+  final bool withoutSeeAll;
+
   final String title;
   const GoldTitleOfMainCard(
-      {Key? key, required this.title, this.withoutVerticalPadding = false})
+      {Key? key,
+      required this.title,
+      this.withoutSeeAll = false,
+      this.withoutVerticalPadding = false})
       : super(key: key);
 
   @override
@@ -24,7 +29,7 @@ class GoldTitleOfMainCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            height: 30.h,
+            height: 23.h,
             width: 4.w,
             decoration: BoxDecoration(
                 color: ColorManager.blackYellow,
@@ -39,12 +44,13 @@ class GoldTitleOfMainCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          GestureDetector(
-            onTap: () {},
-            child: Text("SEE ALL",
-                style:
-                    getMediumStyle(fontSize: 15, color: ColorManager.darkBlue)),
-          )
+          if (!withoutSeeAll)
+            GestureDetector(
+              onTap: () {},
+              child: Text("SEE ALL",
+                  style: getMediumStyle(
+                      fontSize: 15, color: ColorManager.darkBlue)),
+            )
         ],
       ),
     );
