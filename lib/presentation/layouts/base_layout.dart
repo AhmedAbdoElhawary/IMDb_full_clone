@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/core/resources/color_manager.dart';
 import 'package:imdb/presentation/pages/home/home_page.dart';
-// import 'package:imdb/data/models/personal_info.dart';
-// import 'package:imdb/presentation/pages/account/account_page.dart';
-// import 'package:imdb/presentation/pages/activity/activity_page.dart';
-// import 'package:imdb/presentation/pages/home/home_page.dart';
 
 class BaseLayout extends StatefulWidget {
   const BaseLayout({Key? key}) : super(key: key);
@@ -38,14 +34,9 @@ class _BaseLayoutState extends State<BaseLayout> {
       ),
       controller: controller,
       tabBuilder: (context, index) {
-        // switch (index) {
-        // case 0:
+    
         return homePage();
-        // case 1:
-        //   return activityPage();
-        // default:
-        //   return accountPage();
-        // }
+
       },
     );
   }
@@ -56,17 +47,6 @@ class _BaseLayoutState extends State<BaseLayout> {
               resizeToAvoidBottomInset: false, child: HomePage()),
         ),
       );
-
-  // Widget activityPage() => CupertinoTabView(
-  //       builder: (context) =>
-  //           const CupertinoPageScaffold(
-             // resizeToAvoidBottomInset: false,child: ActivityPage()),
-  //     );
-
-  // Widget accountPage() => CupertinoTabView(
-  //       builder: (context) => const CupertinoPageScaffold(
-            //  resizeToAvoidBottomInset: false,child: AccountPage()),
-  //     );
 
   BottomNavigationBarItem navigationBarItem(IconData icon, String label) {
     return BottomNavigationBarItem(icon: Icon(icon, size: 25.r), label: label);
