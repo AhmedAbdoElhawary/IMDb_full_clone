@@ -15,7 +15,8 @@ class FilmsMainCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingContainer(
-      child: Column(
+      child: Column(       mainAxisSize: MainAxisSize.min,
+
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GoldTitleOfMainCard(title: title),
