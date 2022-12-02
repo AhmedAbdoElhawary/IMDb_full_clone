@@ -86,6 +86,8 @@ class _TopBoxOfficeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingContainer(
       child: Column(
+               mainAxisSize: MainAxisSize.min,
+
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const GoldTitleOfMainCard(title: "Top box office"),
@@ -172,7 +174,8 @@ class _BornTodayMainCard extends StatelessWidget {
 
     return FloatingContainer(
       height: screenHeight / 2,
-      child: Column(
+      child: Column(       mainAxisSize: MainAxisSize.min,
+
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const GoldTitleOfMainCard(
