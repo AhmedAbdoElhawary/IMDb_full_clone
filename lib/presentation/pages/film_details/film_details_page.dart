@@ -45,6 +45,8 @@ class FilmDetailsPage extends StatelessWidget {
             const RSizedBox(height: 20),
             const _GuideOfParents(),
             const RSizedBox(height: 20),
+            const _DidYouKnow(),
+            const RSizedBox(height: 20),
             const FilmsMainCard("More drama picks"),
             const RSizedBox(height: 20),
             const FilmsMainCard("More from Tom Cruise (Actor)"),
@@ -571,6 +573,57 @@ class _GuideOfParentsState extends State<_GuideOfParents> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _DidYouKnow extends StatelessWidget {
+  const _DidYouKnow();
+
+  @override
+  Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenHeight = screenSize.height;
+
+    return FloatingContainer(
+      height: screenHeight / 1,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const GoldTitleOfMainCard(
+              title: "Did you know?", withoutSeeAll: true),
+          const RSizedBox(height: 10),
+          Flexible(
+            child: ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => Padding(
+                      padding:
+                          REdgeInsets.symmetric(horizontal: _horizontalPadding),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Metacritic",
+                              style: getNormalStyle(fontSize: 16)),
+                          const RSizedBox(height: 7),
+                          Text("4 wins & 16 nominations " * 15,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 4,
+                              style: getNormalStyle(
+                                  fontSize: 15, color: ColorManager.black54)),
+                          const RSizedBox(height: 7),
+                        ],
+                      ),
+                    ),
+                separatorBuilder: (context, index) =>
+                    const Divider(color: ColorManager.grey),
+                itemCount: 6),
+          ),
+
+          // const Divider(color: ColorManager.grey),
+        ],
       ),
     );
   }
