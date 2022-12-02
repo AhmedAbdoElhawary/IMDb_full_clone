@@ -83,14 +83,15 @@ class FilmCard extends StatelessWidget {
   }
 }
 
+const String imageUrl =
+    "https://m.media-amazon.com/images/M/MV5BNTM4NjIxNmEtYWE5NS00NDczLTkyNWQtYThhNmQyZGQzMjM0XkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_FMjpg_UX1000_.jpg";
+
 class StaticImage extends StatelessWidget {
   const StaticImage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-        fit: BoxFit.cover,
-        "https://m.media-amazon.com/images/M/MV5BNTM4NjIxNmEtYWE5NS00NDczLTkyNWQtYThhNmQyZGQzMjM0XkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_FMjpg_UX1000_.jpg");
+    return Image.network(fit: BoxFit.cover, imageUrl);
   }
 }
 

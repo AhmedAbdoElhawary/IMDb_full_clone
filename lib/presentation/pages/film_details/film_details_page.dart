@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:imdb/config/routes/route_app.dart';
 import 'package:imdb/core/resources/color_manager.dart';
 import 'package:imdb/core/resources/styles_manager.dart';
 import 'package:imdb/presentation/common/widgets/box_shadows.dart';
@@ -8,8 +9,11 @@ import 'package:imdb/presentation/common/widgets/custom_outlined_button.dart';
 import 'package:imdb/presentation/common/widgets/films_main_floating_container.dart';
 import 'package:imdb/presentation/common/widgets/floating_container.dart';
 import 'package:imdb/presentation/common/widgets/gold_title_of_main_card.dart';
+import 'package:imdb/presentation/common/widgets/play_icon_with_time.dart';
+import 'package:imdb/presentation/pages/films_filtered/films_filtered_page.dart';
 import 'package:imdb/presentation/pages/home/widgets/actor_birth_day_card.dart';
 import 'package:imdb/presentation/pages/home/widgets/film_card.dart';
+import 'package:imdb/presentation/pages/video/video_page.dart';
 
 const double _horizontalPadding = 15;
 
@@ -144,16 +148,22 @@ class _VideosCard extends StatelessWidget {
             child: Stack(
               alignment: Alignment.bottomLeft,
               children: [
-                Container(
-                  height: 210.h,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: ColorManager.teal,
-                      borderRadius: BorderRadius.circular(10.r),
-                      boxShadow: customBoxShadows()),
+                GestureDetector(
+                  onTap: () {
+                    Go(context).offAll(const VideoPage());
+                  },
+                  child: Container(
+                    height: 210.h,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: ColorManager.teal,
+                        borderRadius: BorderRadius.circular(10.r),
+                        boxShadow: customBoxShadows()),
+                  ),
                 ),
                 Padding(
-                    padding: REdgeInsets.all(15.0), child: const _PlayIcon()),
+                    padding: REdgeInsets.all(15.0),
+                    child: const PlayIconWithTime()),
               ],
             ),
           ),
@@ -227,39 +237,45 @@ class _ThumbnailTrailerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 140.h,
-      width: 140.w,
-      decoration: BoxDecoration(
-          color: ColorManager.white,
-          borderRadius: BorderRadius.circular(10.r),
-          boxShadow: customBoxShadows()),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: double.infinity,
-            height: 90.h,
-            child: Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
-                const SizedBox(width: double.infinity, child: StaticImage()),
-                Padding(
-                    padding: REdgeInsets.all(5.0), child: const _PlayIcon()),
-              ],
+    return GestureDetector(
+      onTap: () {
+        Go(context).offAll(const VideoPage());
+      },
+      child: Container(
+        height: 140.h,
+        width: 140.w,
+        decoration: BoxDecoration(
+            color: ColorManager.white,
+            borderRadius: BorderRadius.circular(10.r),
+            boxShadow: customBoxShadows()),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: double.infinity,
+              height: 90.h,
+              child: Stack(
+                alignment: Alignment.bottomLeft,
+                children: [
+                  const SizedBox(width: double.infinity, child: StaticImage()),
+                  Padding(
+                      padding: REdgeInsets.all(5.0),
+                      child: const PlayIconWithTime()),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: REdgeInsets.symmetric(horizontal: 10, vertical: 7),
-            child: Text(
-              "Big Game Spot " * 5,
-              softWrap: true,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              style: getNormalStyle(fontSize: 13),
-            ),
-          )
-        ],
+            Padding(
+              padding: REdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              child: Text(
+                "Big Game Spot " * 5,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                style: getNormalStyle(fontSize: 13),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -897,31 +913,6 @@ class _TitleAndSubTitleTexts extends StatelessWidget {
   }
 }
 
-class _PlayIcon extends StatelessWidget {
-  const _PlayIcon({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Icon(
-          Icons.play_circle_outline,
-          color: ColorManager.white,
-          size: 25,
-        ),
-        const RSizedBox(width: 5),
-        Text(
-          "Trailer 0:29",
-          style: getNormalStyle(
-            fontSize: 15,
-            color: ColorManager.white,
-          ),
-        )
-      ],
-    );
-  }
-}
-
 class _MainFilmInfoCard extends StatelessWidget {
   const _MainFilmInfoCard({Key? key}) : super(key: key);
 
@@ -1130,20 +1121,23 @@ class _PosterAndSubInfo extends StatelessWidget {
 
 class _RoundedActionContainer extends StatelessWidget {
   final String text;
-  const _RoundedActionContainer({
-    Key? key,
-    this.text = "Action",
-  }) : super(key: key);
+  const _RoundedActionContainer({Key? key, this.text = "Action"})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: REdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: ColorManager.grey, width: 1)),
-      child: Center(
-        child: Text(text, style: getNormalStyle(fontSize: 15)),
+    return GestureDetector(
+      onTap: () {
+        Go(context).to(const FilmsFiltered());
+      },
+      child: Container(
+        padding: REdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: ColorManager.grey, width: 1)),
+        child: Center(
+          child: Text(text, style: getNormalStyle(fontSize: 15)),
+        ),
       ),
     );
   }
