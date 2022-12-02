@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
           builder: (controller) {
             return AnnotatedRegion<SystemUiOverlayStyle>(
               value: const SystemUiOverlayStyle(
-                  statusBarColor: ColorManager.statusBarColor,
+                  statusBarColor: ColorManager.black87,
                   statusBarIconBrightness: Brightness.light),
               child: GetMaterialApp(
                 title: 'imdb',
