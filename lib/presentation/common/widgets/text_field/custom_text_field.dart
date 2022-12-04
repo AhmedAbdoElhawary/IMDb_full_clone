@@ -3,15 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/core/resources/color_manager.dart';
 import 'package:imdb/core/resources/styles_manager.dart';
 
-class CustomTextField extends StatelessWidget {
+class SearchTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
   final bool enable;
-  const CustomTextField({
+  const SearchTextField({
     Key? key,
     required this.controller,
     required this.hint,
-    this.enable=true,
+    this.enable = true,
   }) : super(key: key);
 
   @override
