@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/core/resources/color_manager.dart';
 import 'package:imdb/presentation/pages/home/home_page.dart';
+import 'package:imdb/presentation/pages/search/search_page.dart';
 
 class BaseLayout extends StatefulWidget {
   const BaseLayout({Key? key}) : super(key: key);
@@ -34,18 +35,23 @@ class _BaseLayoutState extends State<BaseLayout> {
       ),
       controller: controller,
       tabBuilder: (context, index) {
-    
-        return homePage();
-
+        switch (index) {
+          case 1:
+            return searchPage();
+          default:
+            return homePage();
+        }
       },
     );
   }
 
   Widget homePage() => CupertinoTabView(
-        builder: (context) => CupertinoApp(
-          builder: (context, child) => const CupertinoPageScaffold(
-              resizeToAvoidBottomInset: false, child: HomePage()),
-        ),
+        builder: (context) => const CupertinoPageScaffold(
+            resizeToAvoidBottomInset: false, child: HomePage()),
+      );
+  Widget searchPage() => CupertinoTabView(
+        builder: (context) => const CupertinoPageScaffold(
+            resizeToAvoidBottomInset: false, child: SearchPage()),
       );
 
   BottomNavigationBarItem navigationBarItem(IconData icon, String label) {

@@ -8,10 +8,12 @@
         "Metacritic",
         "Metascore",
         "screenutil",
+        "showtimes",
         "SUBGENRES",
         "TIMEFRAMES",
         "wach",
         "Wakanda",
         "watchlist"
-    ]
+    ],
+    "cmake.sourceDirectory": "${workspaceFolder}/linux"
 }

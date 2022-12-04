@@ -64,7 +64,7 @@ class AppTheme {
 
   static AppBarTheme appBarTheme() {
     return AppBarTheme(
-      elevation: 0,
+      elevation: 4,
       toolbarHeight: 50,
       color: ColorManager.white,
       shadowColor: ColorManager.lowOpacityGrey,

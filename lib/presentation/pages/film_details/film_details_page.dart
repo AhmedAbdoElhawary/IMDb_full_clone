@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/config/routes/route_app.dart';
 import 'package:imdb/core/resources/color_manager.dart';
 import 'package:imdb/core/resources/styles_manager.dart';
+import 'package:imdb/core/utility/constant.dart';
 import 'package:imdb/presentation/common/widgets/box_shadows.dart';
 import 'package:imdb/presentation/common/widgets/custom_elevated_button.dart';
 import 'package:imdb/presentation/common/widgets/custom_outlined_button.dart';
@@ -15,7 +16,6 @@ import 'package:imdb/presentation/pages/home/widgets/actor_birth_day_card.dart';
 import 'package:imdb/presentation/pages/home/widgets/film_card.dart';
 import 'package:imdb/presentation/pages/video/video_page.dart';
 
-const double _horizontalPadding = 15;
 
 class FilmDetailsPage extends StatelessWidget {
   const FilmDetailsPage({super.key});
@@ -55,7 +55,6 @@ class FilmDetailsPage extends StatelessWidget {
   ];
   AppBar appBar() {
     return AppBar(
-      elevation: 4,
       title: Text(
         "Top Gun: Maverick",
         softWrap: true,
@@ -82,7 +81,7 @@ class _CastInfo extends StatelessWidget {
           const GoldTitleOfMainCard(title: "Cast"),
           Padding(
             padding: REdgeInsets.symmetric(
-                horizontal: _horizontalPadding, vertical: 10),
+                horizontal: horizontalPadding, vertical: 10),
             child: Text("TOP BILLED CAST",
                 style:
                     getNormalStyle(fontSize: 13, color: ColorManager.black54)),
@@ -93,14 +92,14 @@ class _CastInfo extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) => Padding(
                       padding: REdgeInsetsDirectional.only(
-                          start: index == 0 ? _horizontalPadding : 8,
-                          end: index == 9 ? _horizontalPadding : 0),
+                          start: index == 0 ? horizontalPadding : 8,
+                          end: index == 9 ? horizontalPadding : 0),
                       child: const Center(child: ActorBirthdayCard()),
                     ),
                 itemCount: 10),
           ),
           Padding(
-            padding: REdgeInsets.all(_horizontalPadding),
+            padding: REdgeInsets.all(horizontalPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -144,7 +143,7 @@ class _VideosCard extends StatelessWidget {
           const GoldTitleOfMainCard(title: "Videos"),
           const RSizedBox(height: 30),
           Padding(
-            padding: REdgeInsets.symmetric(horizontal: _horizontalPadding),
+            padding: REdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Stack(
               alignment: Alignment.bottomLeft,
               children: [
@@ -169,7 +168,7 @@ class _VideosCard extends StatelessWidget {
           ),
           Padding(
             padding: REdgeInsets.symmetric(
-                horizontal: _horizontalPadding, vertical: _horizontalPadding),
+                horizontal: horizontalPadding, vertical: horizontalPadding),
             child:
                 Text("Official Trailer 2", style: getNormalStyle(fontSize: 16)),
           ),
@@ -179,8 +178,8 @@ class _VideosCard extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) => Padding(
                     padding: REdgeInsetsDirectional.only(
-                        start: index == 0 ? _horizontalPadding : 10,
-                        end: index == 9 ? _horizontalPadding : 0),
+                        start: index == 0 ? horizontalPadding : 10,
+                        end: index == 9 ? horizontalPadding : 0),
                     child: const Center(child: _ThumbnailTrailerCard())),
                 itemCount: 10),
           ),
@@ -211,8 +210,8 @@ class _PhotosCard extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) => Padding(
                       padding: REdgeInsetsDirectional.only(
-                          start: index == 0 ? _horizontalPadding : 10,
-                          end: index == 9 ? _horizontalPadding : 0),
+                          start: index == 0 ? horizontalPadding : 10,
+                          end: index == 9 ? horizontalPadding : 0),
                       child: Center(
                         child: Container(
                           height: 155.h,
@@ -298,12 +297,12 @@ class _AwardsCard extends StatelessWidget {
           const RSizedBox(height: 10),
           Padding(
             padding: REdgeInsets.symmetric(
-                horizontal: _horizontalPadding, vertical: 20),
+                horizontal: horizontalPadding, vertical: 20),
             child:
                 Text("Top 250 movies #82", style: getNormalStyle(fontSize: 17)),
           ),
           Padding(
-            padding: REdgeInsets.symmetric(horizontal: _horizontalPadding),
+            padding: REdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Text("4 wins & 16 nominations",
                 style: getNormalStyle(fontSize: 17)),
           ),
@@ -329,7 +328,7 @@ class _UserReviews extends StatelessWidget {
         children: [
           const GoldTitleOfMainCard(title: "User reviews"),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: _horizontalPadding),
+            padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -383,7 +382,7 @@ class _UserReviews extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: REdgeInsets.all(_horizontalPadding),
+            padding: REdgeInsets.all(horizontalPadding),
             child: CustomElevatedButton(
                 backgroundColor: ColorManager.blackYellow,
                 withoutPadding: true,
@@ -397,7 +396,7 @@ class _UserReviews extends StatelessWidget {
                 onPressed: () {}),
           ),
           Padding(
-            padding: REdgeInsets.symmetric(horizontal: _horizontalPadding),
+            padding: REdgeInsets.symmetric(horizontal: horizontalPadding),
             child:
                 Text("Featured Reviews", style: getNormalStyle(fontSize: 17)),
           ),
@@ -407,8 +406,8 @@ class _UserReviews extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) => Padding(
                       padding: REdgeInsetsDirectional.only(
-                          start: index == 0 ? _horizontalPadding : 10,
-                          end: index == 9 ? _horizontalPadding : 0),
+                          start: index == 0 ? horizontalPadding : 10,
+                          end: index == 9 ? horizontalPadding : 0),
                       child: Center(
                         child: Container(
                           height: 155.h,
@@ -445,7 +444,7 @@ class _CriticReviews extends StatelessWidget {
               title: "Critic reviews", withoutSeeAll: true),
           const RSizedBox(height: 10),
           Padding(
-            padding: REdgeInsets.symmetric(horizontal: _horizontalPadding),
+            padding: REdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -516,7 +515,7 @@ class _GuideOfParentsState extends State<_GuideOfParents> {
           const RSizedBox(height: 10),
           Padding(
             padding: REdgeInsets.symmetric(
-                horizontal: _horizontalPadding, vertical: 20),
+                horizontal: horizontalPadding, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -606,7 +605,7 @@ class _DidYouKnow extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) => Padding(
                       padding:
-                          REdgeInsets.symmetric(horizontal: _horizontalPadding),
+                          REdgeInsets.symmetric(horizontal: horizontalPadding),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -658,7 +657,7 @@ class _StoryLine extends StatelessWidget {
               title: "Synopsis", subTitle: "WARNING: Spoilers"),
           const Divider(color: ColorManager.grey),
           Padding(
-            padding: REdgeInsets.symmetric(horizontal: _horizontalPadding),
+            padding: REdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Text("Genres", style: getNormalStyle(fontSize: 16)),
           ),
           const RSizedBox(height: 10),
@@ -668,7 +667,7 @@ class _StoryLine extends StatelessWidget {
                 2,
                 (index) => Padding(
                   padding:
-                      REdgeInsetsDirectional.only(start: _horizontalPadding),
+                      REdgeInsetsDirectional.only(start: horizontalPadding),
                   child: SizedBox(
                       width: 70,
                       height: 35,
@@ -701,7 +700,7 @@ class _KeywordsCard extends StatelessWidget {
           const GoldTitleOfMainCard(title: "Keywords"),
           const RSizedBox(height: 10),
           Padding(
-            padding: REdgeInsets.symmetric(horizontal: _horizontalPadding),
+            padding: REdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -896,7 +895,7 @@ class _TitleAndSubTitleTexts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: REdgeInsets.symmetric(horizontal: _horizontalPadding),
+      padding: REdgeInsets.symmetric(horizontal: horizontalPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1030,7 +1029,7 @@ class _AddToWatchListButtonState extends State<_AddToWatchListButton> {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-          REdgeInsets.symmetric(horizontal: _horizontalPadding, vertical: 7.5),
+          REdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 7.5),
       child: isItAdded
           ? CustomOutlinedButton(
               roundedColor: ColorManager.blackYellow,
@@ -1074,7 +1073,7 @@ class _PosterAndSubInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-          REdgeInsets.symmetric(horizontal: _horizontalPadding, vertical: 8),
+          REdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -1084,7 +1083,7 @@ class _PosterAndSubInfo extends StatelessWidget {
             height: 160.h,
             color: ColorManager.blackYellow,
           ),
-          const RSizedBox(width: _horizontalPadding),
+          const RSizedBox(width: horizontalPadding),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1165,7 +1164,7 @@ class _FilmTitleAndSubNumbersInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
-        padding: REdgeInsets.symmetric(horizontal: _horizontalPadding),
+        padding: REdgeInsets.symmetric(horizontal: horizontalPadding),
         child: Text(
           "Top Gun: Maverick",
           softWrap: true,
@@ -1175,7 +1174,7 @@ class _FilmTitleAndSubNumbersInfo extends StatelessWidget {
       ),
       Padding(
         padding:
-            REdgeInsets.symmetric(horizontal: _horizontalPadding, vertical: 5),
+            REdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 5),
         child: Text(
           "2022  PG-13  2h 10m",
           style: getNormalStyle(fontSize: 15, color: ColorManager.grey),
