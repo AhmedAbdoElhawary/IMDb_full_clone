@@ -14,8 +14,7 @@ import 'package:imdb/presentation/common/widgets/play_icon_with_time.dart';
 import 'package:imdb/presentation/pages/films_filtered/films_filtered_page.dart';
 import 'package:imdb/presentation/pages/home/widgets/actor_birth_day_card.dart';
 import 'package:imdb/presentation/pages/home/widgets/film_card.dart';
-import 'package:imdb/presentation/pages/video/video_page.dart';
-
+import 'package:imdb/presentation/pages/video/video_watch_page.dart';
 
 class FilmDetailsPage extends StatelessWidget {
   const FilmDetailsPage({super.key});
@@ -149,7 +148,7 @@ class _VideosCard extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Go(context).offAll(const VideoPage());
+                    Go(context).to(const VideoWatchPage(), withoutRoot: true);
                   },
                   child: Container(
                     height: 210.h,
@@ -238,7 +237,7 @@ class _ThumbnailTrailerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Go(context).offAll(const VideoPage());
+        Go(context).to(const VideoWatchPage(), withoutRoot: true);
       },
       child: Container(
         height: 140.h,
