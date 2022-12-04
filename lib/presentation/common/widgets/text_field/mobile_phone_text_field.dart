@@ -20,11 +20,9 @@ class _MobilePhoneTextFieldState extends State<MobilePhoneTextField> {
   Widget build(BuildContext context) {
     return RSizedBox(
       width: double.infinity,
-      child: CustomTextField(
+      child: SearchTextField(
         controller: widget.controller,
         hint: widget.hint,
-        prefixIcon: prefixIcon(),
-        textInputType: TextInputType.phone,
       ),
     );
   }
