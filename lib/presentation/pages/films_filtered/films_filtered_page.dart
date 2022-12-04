@@ -15,7 +15,6 @@ class FilmsFiltered extends StatelessWidget {
       backgroundColor: ColorManager.veryLowOpacityGrey2,
       appBar: AppBar(
         toolbarHeight: 56.h,
-        elevation: 4,
         title: Text("Action", style: getMediumStyle(fontSize: 20)),
       ),
       body: ListView.separated(
