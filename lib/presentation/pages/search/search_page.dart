@@ -5,7 +5,7 @@ import 'package:imdb/core/resources/color_manager.dart';
 import 'package:imdb/core/resources/styles_manager.dart';
 import 'package:imdb/core/utility/constant.dart';
 import 'package:imdb/presentation/common/widgets/box_shadows.dart';
-import 'package:imdb/presentation/common/widgets/text_field/custom_text_field.dart';
+import 'package:imdb/presentation/pages/search/widgets/search_text_field.dart';
 import 'package:imdb/presentation/pages/films_filtered/films_filtered_page.dart';
 import 'package:imdb/presentation/pages/home/widgets/film_card.dart';
 import 'package:imdb/presentation/pages/search/search_result_page.dart';
