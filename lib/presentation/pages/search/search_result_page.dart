@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:imdb/config/routes/route_app.dart';
 import 'package:imdb/core/resources/color_manager.dart';
 import 'package:imdb/core/resources/styles_manager.dart';
 import 'package:imdb/presentation/pages/search/widgets/search_text_field.dart';
@@ -15,8 +16,10 @@ class SearchResultPage extends StatelessWidget {
         length: 2,
         child: TabBar(
           unselectedLabelStyle:
-              getNormalStyle(color: ColorManager.black54, fontSize: 15),
+              getNormalStyle(color: ColorManager.black87, fontSize: 15),
           labelStyle: getNormalStyle(fontSize: 15),
+          indicatorSize: TabBarIndicatorSize.tab,
+          indicatorColor: ColorManager.blackYellow,
           tabs: const [
             Tab(child: Text("RECENT")),
             Tab(child: Text("ADVANCED SEARCH")),
@@ -28,6 +31,7 @@ class SearchResultPage extends StatelessWidget {
 
   AppBar appBar(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       actions: [
         Flexible(
           child: SizedBox(
@@ -36,28 +40,73 @@ class SearchResultPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Padding(
-                  padding: REdgeInsets.symmetric(horizontal: 15),
-                  child: const Icon(Icons.search),
-                ),
+                const _SearchIcon(),
                 Flexible(
-                    child: SearchTextField(
-                  controller: TextEditingController(),
-                  hint: "Search IMDb",
-                  enable: true,
-                )),
-                const Icon(Icons.mic),
+                  child: SearchTextField(
+                    controller: TextEditingController(),
+                    hint: "Search IMDb",
+                    enable: true,
+                  ),
+                ),
+                const _MicIcon(),
                 const RSizedBox(width: 20),
-                Text(
-                  "CANCEL",
-                  style: getNormalStyle(
-                      fontSize: 15, color: ColorManager.darkBlue),
-                )
+                const _CancelText(),
+                const RSizedBox(width: 20),
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class _SearchIcon extends StatelessWidget {
+  const _SearchIcon({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: REdgeInsets.symmetric(horizontal: 15),
+      child: const Icon(Icons.search),
+    );
+  }
+}
+
+class _CancelText extends StatelessWidget {
+  const _CancelText({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Go(context).back();
+      },
+      child: Text(
+        "CANCEL",
+        style: getMediumStyle(fontSize: 15, color: ColorManager.darkBlue),
+      ),
+    );
+  }
+}
+
+class _MicIcon extends StatelessWidget {
+  const _MicIcon({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: REdgeInsets.all(2),
+      decoration: const BoxDecoration(
+          border:
+              Border(bottom: BorderSide(color: ColorManager.grey, width: 0.7))),
+      child: const Icon(Icons.mic),
     );
   }
 }
