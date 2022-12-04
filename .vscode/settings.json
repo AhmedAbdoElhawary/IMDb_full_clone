@@ -13,5 +13,6 @@
         "wach",
         "Wakanda",
         "watchlist"
-    ]
+    ],
+    "cmake.sourceDirectory": "${workspaceFolder}/linux"
 }
