@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/core/resources/color_manager.dart';
 import 'package:imdb/core/resources/styles_manager.dart';
@@ -7,42 +6,32 @@ import 'package:imdb/core/resources/styles_manager.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
-  final Widget? prefixIcon;
-  final TextInputType? textInputType;
-  const CustomTextField(
-      {Key? key,
-      required this.controller,
-      required this.hint,
-      this.prefixIcon,
-      this.textInputType})
-      : super(key: key);
+  final bool enable;
+  const CustomTextField({
+    Key? key,
+    required this.controller,
+    required this.hint,
+    this.enable=true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      keyboardType: textInputType,
+      keyboardType: TextInputType.text,
       controller: controller,
       cursorColor: ColorManager.black,
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(prefixIcon == null ? 15 : 11)
-      ],
-      style: getMediumStyle(color: Theme.of(context).focusColor, fontSize: 16),
+      enabled: enable,
+      cursorHeight: 25,
+      style: getNormalStyle(color: Theme.of(context).focusColor, fontSize: 20),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: getMediumStyle(color: ColorManager.grey, fontSize: 17),
-        fillColor: ColorManager.veryLightGrey,
+        hintStyle: getNormalStyle(color: ColorManager.black, fontSize: 19),
+        fillColor: ColorManager.transparent,
         filled: true,
-        prefixIcon: prefixIcon,
-        prefixIconConstraints:
-            prefixIcon != null ? BoxConstraints(maxWidth: 60.w) : null,
         border: InputBorder.none,
-        enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(7.0.r),
-            borderSide: BorderSide.none),
-        focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(7.0.r),
-            borderSide: BorderSide(color: ColorManager.black, width: 2.w)),
-        contentPadding: REdgeInsets.symmetric(horizontal: 10, vertical: 15).r,
+        enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+        focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+        contentPadding: REdgeInsets.all(0),
       ),
     );
   }
