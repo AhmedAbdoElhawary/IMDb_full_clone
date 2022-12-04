@@ -69,6 +69,7 @@ class _AdvancedSearchTap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: const [_FiltersLists(), _SeeResultButton()],
     );
   }
@@ -122,16 +123,92 @@ class _FiltersLists extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Flexible(
+      child: Scrollbar(
         child: SingleChildScrollView(
+          child: Padding(
+            padding: REdgeInsets.only(bottom: 20),
             child: Column(
-      children: [
-        Container(
-          height: 1000,
-          width: double.infinity,
-          color: ColorManager.red,
-        )
-      ],
-    )));
+              children: [
+                ...List.generate(
+                  10,
+                  (index) => Padding(
+                    padding: REdgeInsets.only(top: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: REdgeInsets.symmetric(
+                              horizontal: horizontalPadding),
+                          child: Text("Title Type",
+                              style: getNormalStyle(fontSize: 17)),
+                        ),
+                        const RSizedBox(height: 10),
+                        SizedBox(
+                          height: 35.h,
+                          child: ListView.separated(
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) => Padding(
+                                    padding: REdgeInsetsDirectional.only(
+                                        start:
+                                            index == 0 ? horizontalPadding : 0,
+                                        end: index == 19
+                                            ? horizontalPadding
+                                            : 0),
+                                    child: const _BuildSearchContainer(),
+                                  ),
+                              separatorBuilder: (context, index) =>
+                                  const RSizedBox(width: 10),
+                              itemCount: 20),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BuildSearchContainer extends StatefulWidget {
+  const _BuildSearchContainer({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<_BuildSearchContainer> createState() => _BuildSearchContainerState();
+}
+
+class _BuildSearchContainerState extends State<_BuildSearchContainer> {
+  bool selected = false;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selected = !selected;
+        });
+      },
+      child: Container(
+          decoration: BoxDecoration(
+              color: selected
+                  ? ColorManager.blackYellow
+                  : ColorManager.light2Black87,
+              borderRadius: BorderRadius.circular(3)),
+          padding: REdgeInsets.symmetric(horizontal: 10),
+          child: Center(
+            child: Text(
+              "Movie",
+              style: getMediumStyle(
+                  fontSize: 15,
+                  color: selected ? ColorManager.black : ColorManager.white),
+            ),
+          )),
+    );
   }
 }
 
