@@ -108,7 +108,7 @@ class SearchPage extends StatelessWidget {
                   onTap: () {
                     Go(context).to(const SearchResultPage());
                   },
-                  child: CustomTextField(
+                  child: SearchTextField(
                     controller: TextEditingController(),
                     hint: "Search IMDb",
                     enable: false,
