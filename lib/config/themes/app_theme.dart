@@ -24,6 +24,7 @@ class AppTheme {
       iconTheme: const IconThemeData(color: ColorManager.black),
       elevatedButtonTheme: ElevatedButtonThemeData(style: buttonTheme()),
       outlinedButtonTheme: OutlinedButtonThemeData(style: buttonTheme()),
+      
       chipTheme:
           const ChipThemeData(backgroundColor: ColorManager.veryLowOpacityGrey),
       errorColor: ColorManager.black,
