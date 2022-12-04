@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/config/routes/route_app.dart';
 import 'package:imdb/core/resources/color_manager.dart';
 import 'package:imdb/core/resources/styles_manager.dart';
+import 'package:imdb/core/utility/constant.dart';
+import 'package:imdb/presentation/common/widgets/custom_elevated_button.dart';
 import 'package:imdb/presentation/pages/search/widgets/search_text_field.dart';
 
 class SearchResultPage extends StatelessWidget {
@@ -11,18 +13,18 @@ class SearchResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorManager.veryLowOpacityGrey2,
       appBar: appBar(context),
       body: DefaultTabController(
         length: 2,
-        child: TabBar(
-          unselectedLabelStyle:
-              getNormalStyle(color: ColorManager.black87, fontSize: 15),
-          labelStyle: getNormalStyle(fontSize: 15),
-          indicatorSize: TabBarIndicatorSize.tab,
-          indicatorColor: ColorManager.blackYellow,
-          tabs: const [
-            Tab(child: Text("RECENT")),
-            Tab(child: Text("ADVANCED SEARCH")),
+        child: Column(
+          children: const [
+            _TapBar(),
+            Flexible(
+              child: TabBarView(
+                children: [_RecentSearchesTap(), _AdvancedSearchTap()],
+              ),
+            ),
           ],
         ),
       ),
@@ -49,14 +51,203 @@ class SearchResultPage extends StatelessWidget {
                   ),
                 ),
                 const _MicIcon(),
-                const RSizedBox(width: 20),
+                const RSizedBox(width: horizontalPadding),
                 const _CancelText(),
-                const RSizedBox(width: 20),
+                const RSizedBox(width: horizontalPadding),
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class _AdvancedSearchTap extends StatelessWidget {
+  const _AdvancedSearchTap({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: const [_FiltersLists(), _SeeResultButton()],
+    );
+  }
+}
+
+class _SeeResultButton extends StatelessWidget {
+  const _SeeResultButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 65.h,
+      width: double.infinity,
+      color: ColorManager.lightBlack87,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const RSizedBox(width: 20),
+          InkWell(
+            onTap: () {},
+            child: Text(
+              "CLEAR",
+              style: getMediumStyle(
+                  fontSize: 15, color: ColorManager.shimmerDarkGrey),
+            ),
+          ),
+          Flexible(
+            child: Padding(
+              padding: REdgeInsets.symmetric(horizontal: 20),
+              child: CustomElevatedButton(
+                  backgroundColor: ColorManager.blackYellow,
+                  withoutPadding: true,
+                  child:
+                      Text("SEE RESULT", style: getMediumStyle(fontSize: 15)),
+                  onPressed: () {}),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FiltersLists extends StatelessWidget {
+  const _FiltersLists({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+        child: SingleChildScrollView(
+            child: Column(
+      children: [
+        Container(
+          height: 1000,
+          width: double.infinity,
+          color: ColorManager.red,
+        )
+      ],
+    )));
+  }
+}
+
+class _RecentSearchesTap extends StatelessWidget {
+  const _RecentSearchesTap({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      const _RecentSearchesTexts(),
+      const RSizedBox(height: 10),
+      Flexible(
+        child: ListView.separated(
+            itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        height: 85.h,
+                        width: 55.w,
+                        child: Image.network(
+                          "https://cdn.britannica.com/65/227665-050-D74A477E/American-actor-Leonardo-DiCaprio-2016.jpg",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const RSizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Leonardo DiCaprio",
+                              style: getNormalStyle(fontSize: 16)),
+
+                          /// for tv and movie
+                          //  Text("2010-2023 TV Series",
+                          // style: getNormalStyle(
+                          //     fontSize: 16,
+                          //     color: ColorManager.black54)),
+
+                          Text("Actor, inception (2010)",
+                              style: getNormalStyle(
+                                  fontSize: 16, color: ColorManager.black54)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+            separatorBuilder: (context, index) => const Divider(
+                  color: ColorManager.grey,
+                ),
+            itemCount: 10),
+      ),
+    ]);
+  }
+}
+
+class _RecentSearchesTexts extends StatelessWidget {
+  const _RecentSearchesTexts({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: REdgeInsets.all(horizontalPadding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("Recent Searches", style: getNormalStyle(fontSize: 17)),
+          GestureDetector(
+            onTap: () {},
+            child: Text("CLEAR",
+                style:
+                    getMediumStyle(fontSize: 15, color: ColorManager.darkBlue)),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _TapBar extends StatelessWidget {
+  const _TapBar({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: ColorManager.veryLowOpacityGrey2,
+        boxShadow: [
+          BoxShadow(
+            color: ColorManager.grey.withOpacity(.55),
+            spreadRadius: 0.5,
+            blurRadius: 0.5,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: TabBar(
+        unselectedLabelStyle: getMediumStyle(fontSize: 14),
+        labelStyle: getMediumStyle(fontSize: 14),
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicator: BoxDecoration(
+            border: Border(
+                bottom:
+                    BorderSide(color: ColorManager.blackYellow, width: 1.8.w))),
+        unselectedLabelColor: ColorManager.black54,
+        tabs: const [
+          Tab(child: Text("RECENT")),
+          Tab(child: Text("ADVANCED SEARCH")),
+        ],
+      ),
     );
   }
 }
@@ -102,7 +293,8 @@ class _MicIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: REdgeInsets.all(2),
+      width: 35.w,
+      padding: REdgeInsets.symmetric(vertical: 5),
       decoration: const BoxDecoration(
           border:
               Border(bottom: BorderSide(color: ColorManager.grey, width: 0.7))),
