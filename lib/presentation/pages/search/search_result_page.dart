@@ -41,7 +41,7 @@ class SearchResultPage extends StatelessWidget {
                   child: const Icon(Icons.search),
                 ),
                 Flexible(
-                    child: CustomTextField(
+                    child: SearchTextField(
                   controller: TextEditingController(),
                   hint: "Search IMDb",
                   enable: true,
