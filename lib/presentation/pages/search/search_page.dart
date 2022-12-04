@@ -5,8 +5,8 @@ import 'package:imdb/core/resources/color_manager.dart';
 import 'package:imdb/core/resources/styles_manager.dart';
 import 'package:imdb/core/utility/constant.dart';
 import 'package:imdb/presentation/common/widgets/box_shadows.dart';
+import 'package:imdb/presentation/pages/films_filtered/films_filtered_page.dart';
 import 'package:imdb/presentation/pages/home/widgets/film_card.dart';
-import 'package:imdb/presentation/pages/video/video_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -40,9 +40,51 @@ class _SearchPageState extends State<SearchPage> {
                 spacing: 25,
                 runSpacing: 20,
                 children: [
-                  ...List.generate(6, (index) => const _ThumbnailTrailerCard()),
+                  ...List.generate(10,
+                      (index) => _ThumbnailTrailerCard(title: titles()[index])),
                 ],
-              )
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: _MoviesText(icon: Icons.tv, title: "Streaming & TV"),
+              ),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.start,
+                spacing: 25,
+                runSpacing: 20,
+                children: [
+                  ...List.generate(7,
+                      (index) => _ThumbnailTrailerCard(title: titles()[index])),
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: _MoviesText(icon: Icons.person, title: "Celebs"),
+              ),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.start,
+                spacing: 25,
+                runSpacing: 20,
+                children: [
+                  ...List.generate(3,
+                      (index) => _ThumbnailTrailerCard(title: titles()[index])),
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: _MoviesText(
+                    icon: Icons.stars_rounded, title: "Awards & Events"),
+              ),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.start,
+                spacing: 25,
+                runSpacing: 20,
+                children: [
+                  ...List.generate(3,
+                      (index) => _ThumbnailTrailerCard(title: titles()[index])),
+                ],
+              ),
+              const RSizedBox(height: 20),
             ],
           ),
         ),
@@ -76,11 +118,30 @@ class _SearchPageState extends State<SearchPage> {
       ],
     );
   }
+
+  List<String> titles() => [
+        "Popular movie trailers",
+        "Recent movie trailers",
+        "Movie showtimes",
+        "Top box office",
+        "Top 250 movies",
+        "Most popular movies",
+        "Popular movie trailers",
+        "Recent movie trailers",
+        "Movie showtimes",
+        "Top box office",
+        "Top 250 movies",
+        "Most popular movies",
+      ];
 }
 
 class _MoviesText extends StatelessWidget {
+  final String title;
+  final IconData icon;
   const _MoviesText({
     Key? key,
+    this.title = "Movies",
+    this.icon = Icons.movie_creation,
   }) : super(key: key);
 
   @override
@@ -89,10 +150,9 @@ class _MoviesText extends StatelessWidget {
       padding: REdgeInsets.only(top: 30, bottom: horizontalPadding),
       child: Row(
         children: [
-          const Icon(Icons.movie_creation,
-              color: ColorManager.blackYellow, size: 33),
+          Icon(icon, color: ColorManager.blackYellow, size: 33),
           const RSizedBox(width: 20),
-          Expanded(child: Text("Movies", style: getBoldStyle(fontSize: 22))),
+          Expanded(child: Text(title, style: getBoldStyle(fontSize: 22))),
         ],
       ),
     );
@@ -144,13 +204,15 @@ class _RecentlyVisited extends StatelessWidget {
 }
 
 class _ThumbnailTrailerCard extends StatelessWidget {
-  const _ThumbnailTrailerCard({Key? key}) : super(key: key);
+  final String title;
+  const _ThumbnailTrailerCard({Key? key, this.title = "Top box office"})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Go(context).offAll(const VideoPage());
+        Go(context).offAll(const FilmsFiltered());
       },
       child: Container(
         height: 165.h,
@@ -175,7 +237,7 @@ class _ThumbnailTrailerCard extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Top box office",
+                  title,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
