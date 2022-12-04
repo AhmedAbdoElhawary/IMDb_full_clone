@@ -15,6 +15,8 @@ class ColorManager {
   static const Color statusBarColor = Color(0xff0c100e);
   static const Color black = Color(0xff000000);
   static const Color black87 = Color.fromARGB(255, 34, 34, 34);
+  static const Color lightBlack87 = Color.fromARGB(255, 43, 43, 43);
+
   static const Color black54 = Color(0x8a000000);
   static const Color black26 = Color(0x42000000);
   static const Color black12 = Color(0x0000001F);
