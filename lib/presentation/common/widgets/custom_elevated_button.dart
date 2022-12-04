@@ -23,7 +23,7 @@ class CustomElevatedButton extends StatelessWidget {
       style: outlinedStyle(),
       onPressed: onPressed,
       child: Padding(
-        padding: REdgeInsets.all(withoutPadding ? 0 : 4.5).r,
+        padding: REdgeInsets.all(withoutPadding ? 0 : 4.5.r),
         child: child,
       ),
     );
