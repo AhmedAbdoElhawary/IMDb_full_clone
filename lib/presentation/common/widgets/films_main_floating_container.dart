@@ -8,7 +8,6 @@ import 'package:imdb/presentation/common/widgets/gold_title_of_main_card.dart';
 import 'package:imdb/presentation/common/widgets/suggestion_filtered_container.dart';
 import 'package:imdb/presentation/pages/home/widgets/film_card.dart';
 
-
 class FilmsMainCard extends StatelessWidget {
   final String title;
   const FilmsMainCard(this.title, {super.key});
@@ -16,8 +15,8 @@ class FilmsMainCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingContainer(
-      child: Column(       mainAxisSize: MainAxisSize.min,
-
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GoldTitleOfMainCard(title: title),
