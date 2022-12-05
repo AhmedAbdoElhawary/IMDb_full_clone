@@ -6,10 +6,10 @@ import 'package:flutter/cupertino.dart';
 class Go {
 final BuildContext context;
 Go(this.context);
- to( Widget page)  {
+ to( Widget page,{bool withoutRoot=false})  {
   PageRoute route =
-      CupertinoPageRoute(builder: (context) => page, maintainState: false);
-  return Navigator.of(context, rootNavigator: false).push(route);
+      CupertinoPageRoute(builder: (context) => page, maintainState: withoutRoot);
+  return Navigator.of(context, rootNavigator: withoutRoot).push(route);
 }
 
   offAll(Widget page) {

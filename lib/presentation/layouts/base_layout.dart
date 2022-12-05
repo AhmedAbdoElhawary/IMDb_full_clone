@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/core/resources/color_manager.dart';
 import 'package:imdb/presentation/pages/home/home_page.dart';
+import 'package:imdb/presentation/pages/personal/personal_page.dart';
 import 'package:imdb/presentation/pages/search/search_page.dart';
+import 'package:imdb/presentation/pages/video/video_page.dart';
 
 class BaseLayout extends StatefulWidget {
   const BaseLayout({Key? key}) : super(key: key);
@@ -36,10 +38,14 @@ class _BaseLayoutState extends State<BaseLayout> {
       controller: controller,
       tabBuilder: (context, index) {
         switch (index) {
+          case 0:
+            return homePage();
           case 1:
             return searchPage();
+          case 2:
+            return videoPage();
           default:
-            return homePage();
+            return personalPage();
         }
       },
     );
@@ -52,6 +58,14 @@ class _BaseLayoutState extends State<BaseLayout> {
   Widget searchPage() => CupertinoTabView(
         builder: (context) => const CupertinoPageScaffold(
             resizeToAvoidBottomInset: false, child: SearchPage()),
+      );
+  Widget videoPage() => CupertinoTabView(
+        builder: (context) => const CupertinoPageScaffold(
+            resizeToAvoidBottomInset: false, child: VideoPage()),
+      );
+  Widget personalPage() => CupertinoTabView(
+        builder: (context) => const CupertinoPageScaffold(
+            resizeToAvoidBottomInset: false, child: PersonalPage()),
       );
 
   BottomNavigationBarItem navigationBarItem(IconData icon, String label) {

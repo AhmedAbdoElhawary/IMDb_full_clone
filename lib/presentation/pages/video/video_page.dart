@@ -1,301 +1,137 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:imdb/config/routes/route_app.dart';
 import 'package:imdb/core/resources/color_manager.dart';
 import 'package:imdb/core/resources/styles_manager.dart';
 import 'package:imdb/core/utility/constant.dart';
-import 'package:imdb/presentation/common/widgets/basic_film_and_sub_info_in_row.dart';
-import 'package:imdb/presentation/common/widgets/play_icon_with_time.dart';
+import 'package:imdb/presentation/common/widgets/box_shadows.dart';
+import 'package:imdb/presentation/common/widgets/floating_container.dart';
+import 'package:imdb/presentation/common/widgets/gold_title_of_main_card.dart';
+import 'package:imdb/presentation/common/widgets/suggestion_filtered_container.dart';
+import 'package:imdb/presentation/pages/film_details/film_details_page.dart';
+import 'package:imdb/presentation/pages/home/widgets/add_to_wach_list.dart';
 import 'package:imdb/presentation/pages/home/widgets/film_card.dart';
 
-class VideoPage extends StatefulWidget {
+class VideoPage extends StatelessWidget {
   const VideoPage({super.key});
 
   @override
-  State<VideoPage> createState() => _VideoPageState();
-}
-
-class _VideoPageState extends State<VideoPage> {
-  @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    double screenHeight = screenSize.height;
-
     return Scaffold(
-      backgroundColor: ColorManager.black,
+      backgroundColor: ColorManager.veryLowOpacityGrey2,
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-                height: screenHeight / 3.65,
-                width: double.infinity,
-                color: ColorManager.black),
-            Flexible(
-                child: ListView.separated(
-                    itemBuilder: (context, index) => index == 0
-                        ? const _FoldContainers()
-                        : const _VideosOfPlayList(),
-                    separatorBuilder: (context, index) =>
-                        const RSizedBox(height: 1),
-                    itemCount: 30))
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              ...List.generate(5, (index) => const _VideosCard()),
+              const RSizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _FoldContainers extends StatefulWidget {
-  const _FoldContainers({Key? key}) : super(key: key);
-
-  @override
-  State<_FoldContainers> createState() => _FoldContainersState();
-}
-
-class _FoldContainersState extends State<_FoldContainers> {
-  bool foldInfo = false;
+class _VideosCard extends StatelessWidget {
+  const _VideosCard();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: () {
-            setState(() => foldInfo = !foldInfo);
-          },
-          child: _NowPlayingText(foldInfo: foldInfo),
-        ),
-        GestureDetector(
-          onTap: () {
-            setState(() => foldInfo = !foldInfo);
-          },
-          child: _FilmSubInfoFolded(foldInfo: foldInfo),
-        ),
-        const _PlayListText(),
-      ],
-    );
-  }
-}
+    double screenHeight = MediaQuery.of(context).size.height;
 
-class _VideosOfPlayList extends StatelessWidget {
-  const _VideosOfPlayList({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Padding(
-        padding: REdgeInsets.only(
-            top: horizontalPadding,
-            left: horizontalPadding,
-            right: horizontalPadding),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
-                SizedBox(
-                  height: 105.h,
-                  width: 160.w,
-                  child: ShaderMask(
-                    shaderCallback: (bounds) {
-                      return const LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        stops: [0.005, 0.2],
-                        colors: [
-                          ColorManager.darkGray,
-                          ColorManager.transparent,
-                        ],
-                      ).createShader(bounds);
-                    },
-                    blendMode: BlendMode.dstOut,
-                    child: Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Padding(
-                    padding:
-                        REdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: const PlayIconWithTime()),
+    return FloatingContainer(
+      height: screenHeight / 2.2,
+      withPadding: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const GoldTitleOfMainCard(title: "Popular trailers"),
+          const RSizedBox(height: 15),
+          SizedBox(
+            height: 35.h,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              children: const [
+                RSizedBox(width: horizontalPadding),
+                SuggestionFilteredContainer(),
+                RSizedBox(width: horizontalPadding),
+                SuggestionFilteredContainer(),
+                RSizedBox(width: horizontalPadding),
+                SuggestionFilteredContainer(),
+                RSizedBox(width: horizontalPadding),
               ],
             ),
-            const RSizedBox(width: 10),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Black Panther: Wakanda Forever " * 3,
-                    softWrap: true,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style:
-                        getNormalStyle(fontSize: 15, color: ColorManager.white),
-                  ),
-                  const RSizedBox(height: 10),
-                  Text(
-                    "Official Trailer",
-                    softWrap: true,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style:
-                        getNormalStyle(fontSize: 15, color: ColorManager.grey),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _NowPlayingText extends StatelessWidget {
-  const _NowPlayingText({Key? key, required this.foldInfo}) : super(key: key);
-
-  final bool foldInfo;
-
-  @override
-  Widget build(BuildContext context) {
-    return _LightContainerForTitle(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "NOW PLAYING",
-            style: getMediumStyle(fontSize: 15, color: ColorManager.white),
           ),
-          Icon(foldInfo ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-              color: ColorManager.white)
+          Flexible(
+            child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => Padding(
+                      padding: REdgeInsetsDirectional.only(
+                          start: index == 0 ? horizontalPadding : 8,
+                          end: index == 9 ? horizontalPadding : 0),
+                      child: Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            Go(context).to(const FilmDetailsPage());
+                          },
+                          child: Container(
+                            height: 215.h,
+                            width: 300.w,
+                            decoration: BoxDecoration(
+                              color: ColorManager.white,
+                              borderRadius: BorderRadius.circular(10.r),
+                              boxShadow: customBoxShadows(),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.r),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Stack(
+                                    children: [
+                                      SizedBox(
+                                        height: 170.h,
+                                        width: double.infinity,
+                                        child: const StaticImage(),
+                                      ),
+                                      const Align(
+                                          alignment: Alignment.topLeft,
+                                          child: AddToWatchList()),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding:
+                                        REdgeInsets.symmetric(horizontal: 7),
+                                    child: SizedBox(
+                                      height: 45.h,
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "The people We",
+                                          maxLines: 2,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: getNormalStyle(fontSize: 15),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                itemCount: 10),
+          ),
         ],
       ),
-    );
-  }
-}
-
-class _PlayListText extends StatelessWidget {
-  const _PlayListText({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return _LightContainerForTitle(
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          "PLAYLIST",
-          style: getMediumStyle(fontSize: 15, color: ColorManager.white),
-        ),
-      ),
-    );
-  }
-}
-
-class _LightContainerForTitle extends StatelessWidget {
-  const _LightContainerForTitle({Key? key, required this.child})
-      : super(key: key);
-  final Widget child;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: REdgeInsets.symmetric(horizontal: horizontalPadding),
-      height: 50.h,
-      width: double.infinity,
-      color: ColorManager.black87,
-      child: Padding(
-        padding: REdgeInsets.symmetric(vertical: 10),
-        child: child,
-      ),
-    );
-  }
-}
-
-class _FilmSubInfoFolded extends StatelessWidget {
-  const _FilmSubInfoFolded({Key? key, required this.foldInfo})
-      : super(key: key);
-
-  final bool foldInfo;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        Container(
-          height: foldInfo ? 150 : null,
-          padding: REdgeInsets.all(horizontalPadding),
-          width: double.infinity,
-          color: const Color.fromARGB(255, 29, 29, 29),
-          child: SingleChildScrollView(
-            physics: const NeverScrollableScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "\"Time\" TV Spot",
-                  style:
-                      getNormalStyle(fontSize: 16, color: ColorManager.white),
-                ),
-                const RSizedBox(height: 5),
-                Text(
-                  "The nation of Wakanda is pitted against intervening " * 3,
-                  softWrap: true,
-                  maxLines: foldInfo ? 1 : 50,
-                  overflow: TextOverflow.ellipsis,
-                  style: getNormalStyle(fontSize: 15, color: ColorManager.grey),
-                ),
-                const RSizedBox(height: horizontalPadding),
-                const BasicFilmAndSubInfoInRow(
-                    makTextWhite: true, paddingInAll: 0),
-                const RSizedBox(height: horizontalPadding),
-                SizedBox(
-                  height: 45.h,
-                  child: Scrollbar(
-                    child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => Row(
-                              children: [
-                                const CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: ColorManager.darkGray,
-                                  backgroundImage: NetworkImage(imageUrl),
-                                ),
-                                const RSizedBox(width: 5),
-                                Text(
-                                  "Ahmed Abdo",
-                                  softWrap: true,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: getNormalStyle(
-                                      fontSize: 14, color: ColorManager.white),
-                                )
-                              ],
-                            ),
-                        separatorBuilder: (context, index) =>
-                            const RSizedBox(width: 10),
-                        itemCount: 10),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-        if (foldInfo)
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [ColorManager.black, ColorManager.transparent],
-              ),
-            ),
-            height: 100,
-            width: double.infinity,
-          ),
-      ],
     );
   }
 }
