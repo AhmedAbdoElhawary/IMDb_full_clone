@@ -8,6 +8,7 @@ import 'package:imdb/helper/themes/theme_service.dart';
 import 'package:imdb/helper/translations/app_lang.dart';
 import 'package:imdb/helper/translations/translations.dart';
 import 'package:imdb/views/base_layouts/base_layout.dart';
+import 'package:imdb/views/multi_bloc_provider.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -19,7 +20,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return materialApp();
+    return MultiBlocs(materialApp());
   }
 
   ScreenUtilInit materialApp() {

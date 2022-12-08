@@ -1,31 +1,27 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform;
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:imdb/helper/resources/color_manager.dart';
 
 bool isThatAndroid = defaultTargetPlatform == TargetPlatform.android;
 
 class CustomCircularProgress extends StatelessWidget {
   final Color color;
 
-  const CustomCircularProgress(this.color, {Key? key}) : super(key: key);
+  const CustomCircularProgress({this.color = ColorManager.black, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return RSizedBox(
-      width: 50.w,
-      child: Transform.scale(
-        scale: 0.50,
-        child: ClipOval(
-          child: isThatAndroid
-              ? CircularProgressIndicator(
-                  strokeWidth: 6.w,
-                  color: color,
-                )
-              : CupertinoActivityIndicator(color: color),
-        ),
-      ),
+      child: isThatAndroid
+          ? CircularProgressIndicator(
+              strokeWidth: 3.w,
+              color: color,
+            )
+          : CupertinoActivityIndicator(color: color),
     );
   }
 }

@@ -3,16 +3,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/routes/route_app.dart';
+import 'package:imdb/view_models/film/film_items.dart';
 import 'package:imdb/views/pages/film_details/film_details_page.dart';
 import 'package:imdb/views/pages/home/widgets/add_to_wach_list.dart';
-import 'package:imdb/views/pages/home/widgets/film_card.dart';
 
 class BasicFilmAndSubInfoInRow extends StatelessWidget {
   final bool makTextWhite;
   final double paddingInAll;
-
+  final FilmItems? filmItems;
   const BasicFilmAndSubInfoInRow(
-      {this.paddingInAll = 10, this.makTextWhite = false, Key? key})
+      {this.paddingInAll = 10,
+      this.filmItems,
+      this.makTextWhite = false,
+      Key? key})
       : super(key: key);
 
   @override
@@ -32,7 +35,8 @@ class BasicFilmAndSubInfoInRow extends StatelessWidget {
                 SizedBox(
                   height: 130.h,
                   width: 90.w,
-                  child: const StaticImage(),
+                  child:
+                      Image.network(fit: BoxFit.cover, filmItems?.image ?? ""),
                 ),
                 const Align(
                     alignment: Alignment.topLeft,
@@ -46,10 +50,10 @@ class BasicFilmAndSubInfoInRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Black Panther: Wakanda Forever",
+                    "${filmItems?.rank}. ${filmItems?.title ?? ""}",
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
-                    maxLines: makTextWhite ? 3 : null,
+                    maxLines: 3,
                     style: getNormalStyle(
                         fontSize: makTextWhite ? 20 : 15,
                         color: makTextWhite
@@ -58,7 +62,7 @@ class BasicFilmAndSubInfoInRow extends StatelessWidget {
                   ),
                   const RSizedBox(height: 10),
                   Text(
-                    "2022  2h 41m  PG-13",
+                    "${filmItems?.year ?? ""}  2h 41m  PG-13",
                     style: getNormalStyle(
                         fontSize: 14,
                         color: makTextWhite
@@ -77,7 +81,7 @@ class BasicFilmAndSubInfoInRow extends StatelessWidget {
                           Padding(
                             padding: REdgeInsets.symmetric(horizontal: 5),
                             child: Text(
-                              "7.3",
+                              filmItems?.imDbRating ?? "",
                               style: getNormalStyle(
                                   fontSize: 15,
                                   color: makTextWhite
@@ -86,22 +90,30 @@ class BasicFilmAndSubInfoInRow extends StatelessWidget {
                             ),
                           ),
                           const RSizedBox(width: 4),
-                          if (!makTextWhite)
-                            Container(
-                              height: 20,
-                              width: 20,
-                              color: ColorManager.green,
-                            )
+                          // if (!makTextWhite)
+                          // Container(
+                          //   height: 20,
+                          //   width: 20,
+                          //   color: ColorManager.green,
+                          //   child: Text(
+                          //     filmItems?.imDbRatingCount ?? "",
+                          //     style: getNormalStyle(
+                          //         fontSize: 15,
+                          //         color: makTextWhite
+                          //             ? ColorManager.white
+                          //             : ColorManager.black),
+                          //   ),
+                          // )
                         ],
                       ),
                     ),
                   ),
-                  if (!makTextWhite)
-                    Text(
-                      "Watch options",
-                      style: getNormalStyle(
-                          fontSize: 16, color: ColorManager.blue),
-                    ),
+                  // if (!makTextWhite)
+                  //   Text(
+                  //     "Watch options",
+                  //     style: getNormalStyle(
+                  //         fontSize: 16, color: ColorManager.blue),
+                  //   ),
                 ],
               ),
             ),

@@ -7,7 +7,8 @@ import 'package:imdb/helper/utility/constant.dart';
 import 'package:imdb/views/common_widgets/box_shadows.dart';
 import 'package:imdb/views/pages/films_filtered/films_filtered_page.dart';
 import 'package:imdb/views/pages/home/widgets/film_card.dart';
-import 'package:imdb/views/pages/search/search_result_page.dart';
+import 'package:imdb/views/pages/search/main_pages/search_result_page.dart';
+import 'package:imdb/views/pages/search/sub_pages/top_250_movies_page.dart';
 import 'package:imdb/views/pages/search/widgets/search_text_field.dart';
 
 class SearchPage extends StatelessWidget {
@@ -215,7 +216,7 @@ class _ThumbnailTrailerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Go(context).offAll(const FilmsFiltered());
+        Go(context).to(const Top250MoviesPage());
       },
       child: Container(
         height: 165.h,
