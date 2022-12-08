@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/views/pages/home/home_page.dart';
 import 'package:imdb/views/pages/personal/personal_page.dart';
-import 'package:imdb/views/pages/search/search_page.dart';
+import 'package:imdb/views/pages/search/main_pages/search_page.dart';
 import 'package:imdb/views/pages/video/video_page.dart';
 
 class BaseLayout extends StatefulWidget {
