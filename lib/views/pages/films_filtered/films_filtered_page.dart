@@ -3,29 +3,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/utility/constant.dart';
+import 'package:imdb/view_models/film/film_details.dart';
 import 'package:imdb/views/common_widgets/basic_film_and_sub_info_in_row.dart';
 import 'package:imdb/views/common_widgets/suggestion_filtered_container.dart';
 
 class FilmsFiltered extends StatelessWidget {
-  const FilmsFiltered({super.key});
+ final FilmDetails? filmsDetails;
+  const FilmsFiltered({super.key, this.filmsDetails});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorManager.veryLowOpacityGrey2,
-      appBar: AppBar(
-        toolbarHeight: 56.h,
-        title: Text("Action", style: getMediumStyle(fontSize: 20)),
-      ),
-      body: ListView.separated(
+    return  ListView.separated(
           itemBuilder: (context, index) => index == 0
               ? const _FilteredWidgets()
-              : const BasicFilmAndSubInfoInRow(),
+              :  BasicFilmAndSubInfoInRow(filmItems:filmsDetails?.items?[index] ),
           separatorBuilder: (context, index) => index == 0
               ? const SizedBox()
               : const Divider(color: ColorManager.grey, height: 1),
-          itemCount: 50),
-    );
+          itemCount: 50);
   }
 }
 
@@ -67,7 +62,7 @@ class _FilteredWidgets extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("100 Results", style: getNormalStyle(fontSize: 15)),
+                      Text("250 Results", style: getNormalStyle(fontSize: 15)),
                       Text("Sorted by popularity",
                           style: getNormalStyle(
                               fontSize: 13, color: ColorManager.black54)),
