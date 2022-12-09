@@ -1,15 +1,15 @@
 import 'package:imdb/helper/functions/api_result.dart';
 import 'package:imdb/helper/functions/network_exceptions.dart';
-import 'package:imdb/models/most_popular_films_api.dart';
-import 'package:imdb/view_models/film/film_details.dart';
+import 'package:imdb/models/remote/most_popular_films/most_popular_films_api.dart';
+import 'package:imdb/view_models/film/film_sub_details/film_sub_details.dart';
 
 class MostPopularFilmsRepo {
   final MostPopularFilmsApi _mostPopularFilmsApi;
   MostPopularFilmsRepo(this._mostPopularFilmsApi);
 
-  Future<ApiResult<FilmDetails>> getMostPopularMovies() async {
+  Future<ApiResult<FilmSubDetails>> getMostPopularMovies() async {
     try {
-      FilmDetails mostPopularMovies =
+      FilmSubDetails mostPopularMovies =
           await _mostPopularFilmsApi.getMostPopularMovies();
       return ApiResult.success(mostPopularMovies);
     } catch (e) {
@@ -17,9 +17,9 @@ class MostPopularFilmsRepo {
     }
   }
 
-  Future<ApiResult<FilmDetails>> getMostPopularTVs() async {
+  Future<ApiResult<FilmSubDetails>> getMostPopularTVs() async {
     try {
-      FilmDetails mostPopularTVs =
+      FilmSubDetails mostPopularTVs =
           await _mostPopularFilmsApi.getMostPopularTVs();
       return ApiResult.success(mostPopularTVs);
     } catch (e) {
