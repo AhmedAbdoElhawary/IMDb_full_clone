@@ -3,24 +3,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/utility/constant.dart';
-import 'package:imdb/view_models/film/film_details.dart';
+import 'package:imdb/view_models/film/film_sub_details/film_sub_details.dart';
 import 'package:imdb/views/common_widgets/basic_film_and_sub_info_in_row.dart';
 import 'package:imdb/views/common_widgets/suggestion_filtered_container.dart';
 
 class FilmsFiltered extends StatelessWidget {
- final FilmDetails? filmsDetails;
+  final FilmSubDetails? filmsDetails;
   const FilmsFiltered({super.key, this.filmsDetails});
 
   @override
   Widget build(BuildContext context) {
-    return  ListView.separated(
-          itemBuilder: (context, index) => index == 0
-              ? const _FilteredWidgets()
-              :  BasicFilmAndSubInfoInRow(filmItems:filmsDetails?.items?[index] ),
-          separatorBuilder: (context, index) => index == 0
-              ? const SizedBox()
-              : const Divider(color: ColorManager.grey, height: 1),
-          itemCount: 50);
+    return ListView.separated(
+        itemBuilder: (context, index) => index == 0
+            ? const _FilteredWidgets()
+            : BasicFilmAndSubInfoInRow(filmItems: filmsDetails?.items?[index]),
+        separatorBuilder: (context, index) => index == 0
+            ? const SizedBox()
+            : const Divider(color: ColorManager.grey, height: 1),
+        itemCount: 50);
   }
 }
 
