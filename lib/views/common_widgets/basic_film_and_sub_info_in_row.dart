@@ -3,14 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/routes/route_app.dart';
-import 'package:imdb/view_models/film/film_items.dart';
+import 'package:imdb/view_models/film/film_sub_details/film_sub_items.dart';
 import 'package:imdb/views/pages/film_details/film_details_page.dart';
 import 'package:imdb/views/pages/home/widgets/add_to_wach_list.dart';
 
 class BasicFilmAndSubInfoInRow extends StatelessWidget {
   final bool makTextWhite;
   final double paddingInAll;
-  final FilmItems? filmItems;
+  final FilmSubItems? filmItems;
   const BasicFilmAndSubInfoInRow(
       {this.paddingInAll = 10,
       this.filmItems,
