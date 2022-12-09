@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:imdb/helper/utility/app_prefs.dart';
-import 'package:imdb/models/box_office.dart';
-import 'package:imdb/models/info_with_id_api.dart';
-import 'package:imdb/models/most_popular_films_api.dart';
-import 'package:imdb/models/new_films_api.dart';
-import 'package:imdb/models/top_250_films_api.dart';
+import 'package:imdb/models/remote/box_office/box_office.dart';
+import 'package:imdb/models/remote/different_calls_from/different_calls_from_api.dart';
+import 'package:imdb/models/remote/most_popular_films/most_popular_films_api.dart';
+import 'package:imdb/models/remote/new_films/new_films_api.dart';
+import 'package:imdb/models/remote/top_250_films/top_250_films_api.dart';
 import 'package:imdb/repositories/box_office_repo.dart';
 import 'package:imdb/repositories/info_with_id_repo.dart';
 import 'package:imdb/repositories/most_popular_films_repo.dart';
@@ -35,19 +35,19 @@ Future<void> initializeDependencies() async {
   injector
       .registerLazySingleton<BoxOfficeRepo>(() => BoxOfficeRepo(injector()));
   injector
-      .registerLazySingleton<InfoWithIdRepo>(() => InfoWithIdRepo(injector()));
+      .registerLazySingleton<InfoWithIdRepo>(() => InfoWithIdRepo(injector(),injector()));
   injector.registerLazySingleton<MostPopularFilmsRepo>(
       () => MostPopularFilmsRepo(injector()));
   injector.registerLazySingleton<NewFilmsRepo>(() => NewFilmsRepo(injector()));
-  injector
-      .registerLazySingleton<Top250FilmsRepo>(() => Top250FilmsRepo(injector()));
+  injector.registerLazySingleton<Top250FilmsRepo>(
+      () => Top250FilmsRepo(injector()));
 
   /// Apis
   injector.registerLazySingleton<BoxOfficeApi>(
       () => BoxOfficeApi(createAndSetupDio()));
 
-  injector.registerLazySingleton<InfoWithIdApi>(
-      () => InfoWithIdApi(createAndSetupDio()));
+  injector.registerLazySingleton<DifferentCallsFromApi>(
+      () => DifferentCallsFromApi(createAndSetupDio()));
 
   injector.registerLazySingleton<MostPopularFilmsApi>(
       () => MostPopularFilmsApi(createAndSetupDio()));
@@ -61,11 +61,14 @@ Future<void> initializeDependencies() async {
   /// bloc
   injector.registerLazySingleton<Top250FilmsCubit>(
       () => Top250FilmsCubit(injector()));
-  injector.registerLazySingleton<NewFilmsCubit>(() => NewFilmsCubit());
+  injector
+      .registerLazySingleton<NewFilmsCubit>(() => NewFilmsCubit(injector()));
   injector.registerLazySingleton<MostPopularFilmsCubit>(
       () => MostPopularFilmsCubit(injector()));
-  injector.registerLazySingleton<InfoWithIdCubit>(() => InfoWithIdCubit());
-  injector.registerLazySingleton<BoxOfficeCubit>(() => BoxOfficeCubit());
+  injector.registerLazySingleton<InfoWithIdCubit>(
+      () => InfoWithIdCubit(injector()));
+  injector
+      .registerLazySingleton<BoxOfficeCubit>(() => BoxOfficeCubit(injector()));
 }
 
 Dio createAndSetupDio() {
