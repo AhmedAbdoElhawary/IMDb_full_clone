@@ -4,7 +4,8 @@ import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/utility/constant.dart';
 import 'package:imdb/view_models/film/film_sub_details/film_sub_details.dart';
-import 'package:imdb/views/common_widgets/basic_film_and_sub_info_in_row.dart';
+import 'package:imdb/view_models/film/film_sub_details/film_sub_items.dart';
+import 'package:imdb/views/common_widgets/film_sub_info_in_row.dart';
 import 'package:imdb/views/common_widgets/suggestion_filtered_container.dart';
 
 class FilmsFiltered extends StatelessWidget {
@@ -13,19 +14,33 @@ class FilmsFiltered extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int lengthOfItem = filmsDetails?.items?.length ?? 0;
     return ListView.separated(
-        itemBuilder: (context, index) => index == 0
-            ? const _FilteredWidgets()
-            : BasicFilmAndSubInfoInRow(filmItems: filmsDetails?.items?[index]),
+        itemBuilder: (context, index) {
+          FilmSubItems? filmItems = filmsDetails?.items?[index==0?index:index - 1];
+
+          return index == 0
+              ? _FilteredWidgets(lengthOfItem: lengthOfItem)
+              : FilmSubInfoInRow(
+                  id: filmItems?.id ?? "",
+                  imDbRating: filmItems?.imDbRating ?? "",
+                  imageUrl: filmItems?.image ?? "",
+                  title: filmItems?.title ?? "",
+                  year: filmItems?.year ?? "",
+                );
+        },
         separatorBuilder: (context, index) => index == 0
             ? const SizedBox()
             : const Divider(color: ColorManager.grey, height: 1),
-        itemCount: 50);
+        itemCount: lengthOfItem + 1);
   }
 }
 
 class _FilteredWidgets extends StatelessWidget {
-  const _FilteredWidgets({Key? key}) : super(key: key);
+  final int lengthOfItem;
+
+  const _FilteredWidgets({Key? key, required this.lengthOfItem})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +77,8 @@ class _FilteredWidgets extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("250 Results", style: getNormalStyle(fontSize: 15)),
+                      Text("$lengthOfItem Results",
+                          style: getNormalStyle(fontSize: 15)),
                       Text("Sorted by popularity",
                           style: getNormalStyle(
                               fontSize: 13, color: ColorManager.black54)),
