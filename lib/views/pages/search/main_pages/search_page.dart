@@ -5,10 +5,12 @@ import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/routes/route_app.dart';
 import 'package:imdb/helper/utility/constant.dart';
 import 'package:imdb/views/common_widgets/box_shadows.dart';
-import 'package:imdb/views/pages/films_filtered/films_filtered_page.dart';
 import 'package:imdb/views/pages/home/widgets/film_card.dart';
 import 'package:imdb/views/pages/search/main_pages/search_result_page.dart';
+import 'package:imdb/views/pages/search/sub_pages/coming_soon_page.dart';
+import 'package:imdb/views/pages/search/sub_pages/most_popular_movies_page.dart';
 import 'package:imdb/views/pages/search/sub_pages/top_250_movies_page.dart';
+import 'package:imdb/views/pages/search/sub_pages/top_box_office_page.dart';
 import 'package:imdb/views/pages/search/widgets/search_text_field.dart';
 
 class SearchPage extends StatelessWidget {
@@ -29,7 +31,7 @@ class SearchPage extends StatelessWidget {
                   children: const [
                     _RecentTexts(),
                     _RecentlyVisited(),
-                    _MoviesText(),
+                    _MoviesText(icon: Icons.movie, title: "Movies"),
                   ],
                 ),
               ),
@@ -38,51 +40,53 @@ class SearchPage extends StatelessWidget {
                 spacing: 25,
                 runSpacing: 20,
                 children: [
-                  ...List.generate(10,
-                      (index) => _ThumbnailTrailerCard(title: titles()[index])),
+                  ...List.generate(
+                      10,
+                      (index) =>
+                          _ThumbnailTrailerCard(card: movieCards[index])),
                 ],
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: _MoviesText(icon: Icons.tv, title: "Streaming & TV"),
               ),
-              Wrap(
-                crossAxisAlignment: WrapCrossAlignment.start,
-                spacing: 25,
-                runSpacing: 20,
-                children: [
-                  ...List.generate(7,
-                      (index) => _ThumbnailTrailerCard(title: titles()[index])),
-                ],
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: _MoviesText(icon: Icons.person, title: "Celebs"),
-              ),
-              Wrap(
-                crossAxisAlignment: WrapCrossAlignment.start,
-                spacing: 25,
-                runSpacing: 20,
-                children: [
-                  ...List.generate(3,
-                      (index) => _ThumbnailTrailerCard(title: titles()[index])),
-                ],
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: _MoviesText(
-                    icon: Icons.stars_rounded, title: "Awards & Events"),
-              ),
-              Wrap(
-                crossAxisAlignment: WrapCrossAlignment.start,
-                spacing: 25,
-                runSpacing: 20,
-                children: [
-                  ...List.generate(3,
-                      (index) => _ThumbnailTrailerCard(title: titles()[index])),
-                ],
-              ),
-              const RSizedBox(height: 20),
+              // Wrap(
+              //   crossAxisAlignment: WrapCrossAlignment.start,
+              //   spacing: 25,
+              //   runSpacing: 20,
+              //   children: [
+              //     ...List.generate(7,
+              //         (index) => _ThumbnailTrailerCard(title: titles()[index])),
+              //   ],
+              // ),
+              // const Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: 20),
+              //   child: _MoviesText(icon: Icons.person, title: "Celebs"),
+              // ),
+              // Wrap(
+              //   crossAxisAlignment: WrapCrossAlignment.start,
+              //   spacing: 25,
+              //   runSpacing: 20,
+              //   children: [
+              //     ...List.generate(3,
+              //         (index) => _ThumbnailTrailerCard(title: titles()[index])),
+              //   ],
+              // ),
+              // const Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: 20),
+              //   child: _MoviesText(
+              //       icon: Icons.stars_rounded, title: "Awards & Events"),
+              // ),
+              // Wrap(
+              //   crossAxisAlignment: WrapCrossAlignment.start,
+              //   spacing: 25,
+              //   runSpacing: 20,
+              //   children: [
+              //     ...List.generate(3,
+              //         (index) => _ThumbnailTrailerCard(title: titles()[index])),
+              //   ],
+              // ),
+              // const RSizedBox(height: 20),
             ],
           ),
         ),
@@ -122,31 +126,13 @@ class SearchPage extends StatelessWidget {
       ],
     );
   }
-
-  List<String> titles() => [
-        "Popular movie trailers",
-        "Recent movie trailers",
-        "Movie showtimes",
-        "Top box office",
-        "Top 250 movies",
-        "Most popular movies",
-        "Popular movie trailers",
-        "Recent movie trailers",
-        "Movie showtimes",
-        "Top box office",
-        "Top 250 movies",
-        "Most popular movies",
-      ];
 }
 
 class _MoviesText extends StatelessWidget {
   final String title;
   final IconData icon;
-  const _MoviesText({
-    Key? key,
-    this.title = "Movies",
-    this.icon = Icons.movie_creation,
-  }) : super(key: key);
+  const _MoviesText({Key? key, required this.icon, required this.title})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +184,8 @@ class _RecentlyVisited extends StatelessWidget {
             itemBuilder: (context, index) => Padding(
                   padding:
                       REdgeInsetsDirectional.only(start: index == 0 ? 5 : 0),
-                  child: const Center(child: _ThumbnailTrailerCard()),
+                  child:
+                      Center(child: _ThumbnailTrailerCard(card: movieCards[0])),
                 ),
             separatorBuilder: (context, index) => const RSizedBox(width: 25),
             itemCount: 5),
@@ -208,15 +195,14 @@ class _RecentlyVisited extends StatelessWidget {
 }
 
 class _ThumbnailTrailerCard extends StatelessWidget {
-  final String title;
-  const _ThumbnailTrailerCard({Key? key, this.title = "Top box office"})
-      : super(key: key);
+  final Map<String, dynamic> card;
+  const _ThumbnailTrailerCard({Key? key, required this.card}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Go(context).to(const Top250MoviesPage());
+        Go(context).to(card["page"]);
       },
       child: Container(
         height: 165.h,
@@ -241,7 +227,7 @@ class _ThumbnailTrailerCard extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  title,
+                  card["title"],
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
@@ -255,3 +241,16 @@ class _ThumbnailTrailerCard extends StatelessWidget {
     );
   }
 }
+
+List<Map<String, dynamic>> movieCards = [
+  {"title": "Popular movie trailers", "page": const Top250MoviesPage()},
+  {"title": "Recent movie trailers", "page": const Top250MoviesPage()},
+  {"title": "Movie showtimes", "page": const Top250MoviesPage()},
+  {"title": "Top box office", "page": const TopBoxOfficePage()},
+  {"title": "Top 250 movies", "page": const Top250MoviesPage()},
+  {"title": "Most popular movies", "page": const MostPopularMoviesPage()},
+  {"title": "Coming soon to theaters", "page": const ComingSoonPage()},
+  {"title": "Most popular movies by genre", "page": const Top250MoviesPage()},
+  {"title": "Best picture winners", "page": const Top250MoviesPage()},
+  {"title": "Movie news", "page": const Top250MoviesPage()},
+];
