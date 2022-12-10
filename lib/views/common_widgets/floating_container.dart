@@ -15,7 +15,7 @@ class FloatingContainer extends StatelessWidget {
     return Padding(
       padding: REdgeInsets.only(top: withPadding ? 20 : 0),
       child: Container(
-        height: height ?? screenHeight / 1.45,
+        height:height==-1?null: height ?? screenHeight / 1.45,
         width: double.infinity,
         decoration: BoxDecoration(
           color: ColorManager.white,
