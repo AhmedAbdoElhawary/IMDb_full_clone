@@ -1,61 +1,88 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:imdb/helper/functions/network_exceptions.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/routes/route_app.dart';
 import 'package:imdb/helper/utility/constant.dart';
+import 'package:imdb/view_models/film/film_details/film_details.dart';
+import 'package:imdb/view_models/film/image/image_details.dart';
+import 'package:imdb/views/bloc/film_info/film_info_cubit.dart';
 import 'package:imdb/views/common_widgets/box_shadows.dart';
+import 'package:imdb/views/common_widgets/custom_circulars_progress.dart';
 import 'package:imdb/views/common_widgets/custom_elevated_button.dart';
 import 'package:imdb/views/common_widgets/custom_outlined_button.dart';
-import 'package:imdb/views/common_widgets/films_main_floating_container.dart';
 import 'package:imdb/views/common_widgets/floating_container.dart';
 import 'package:imdb/views/common_widgets/gold_title_of_main_card.dart';
-import 'package:imdb/views/common_widgets/play_icon_with_time.dart';
+import 'package:imdb/views/common_widgets/suggestion_filtered_container.dart';
 import 'package:imdb/views/pages/films_filtered/films_filtered_page.dart';
-import 'package:imdb/views/pages/home/widgets/actor_birth_day_card.dart';
+import 'package:imdb/views/pages/home/widgets/actor_card.dart';
 import 'package:imdb/views/pages/home/widgets/film_card.dart';
-import 'package:imdb/views/pages/video/video_watch_page.dart';
 
 class FilmDetailsPage extends StatelessWidget {
-  const FilmDetailsPage({super.key});
+  final String filmId;
+  const FilmDetailsPage({required this.filmId, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorManager.veryLowOpacityGrey2,
-      appBar: appBar(),
-      body: ListView.separated(
-          itemBuilder: (context, index) => listOfCards[index],
-          separatorBuilder: (context, index) => const RSizedBox(height: 20),
-          itemCount: listOfCards.length),
+    return BlocBuilder<FilmInfoCubit, FilmInfoState>(
+      bloc: FilmInfoCubit.get(context)..getFilmInfo(filmId: filmId),
+      buildWhen: (previous, current) => previous != current,
+      builder: (context, FilmInfoState state) {
+        if (state is Loaded<FilmDetails>) {
+          FilmDetails filmDetails = state.details;
+          filmDetails.similars;
+          return Scaffold(
+            backgroundColor: ColorManager.veryLowOpacityGrey2,
+            appBar: appBar(filmDetails),
+            body: ListView.separated(
+                itemBuilder: (context, index) =>
+                    listOfCards(filmDetails)[index],
+                separatorBuilder: (context, index) =>
+                    const RSizedBox(height: 20),
+                itemCount: listOfCards(filmDetails).length),
+          );
+        } else if (state is Failed) {
+          return Text(NetworkExceptions.getErrorMessage(state.error));
+        } else {
+          return const Scaffold(body: Center(child: CustomCircularProgress()));
+        }
+      },
     );
   }
 
-  static List<Widget> listOfCards = [
-    const _MainFilmInfoCard(),
-    const _CastInfo(),
-    const FilmsMainCard("More like this"),
-    const _VideosCard(),
-    const _PhotosCard(),
-    const _AwardsCard(),
-    const _UserReviews(),
-    const _CriticReviews(),
-    const _GuideOfParents(),
-    const _DidYouKnow(),
-    const _StoryLine(),
-    const _KeywordsCard(),
-    const _DetailsCard(),
-    const _BoxOfficeCard(),
-    const _TechnicalSpaces(),
-    const FilmsMainCard("More from Tom Cruise (Actor)"),
-    const FilmsMainCard("More from Joseph Kosinski (Director)"),
-    const FilmsMainCard("More drama picks"),
-    const RSizedBox(height: 0)
-  ];
-  AppBar appBar() {
+  static List<Widget> listOfCards(FilmDetails filmDetails) => [
+        _MainFilmInfoCard(filmDetails: filmDetails),
+        _CastInfo(filmDetails: filmDetails),
+        _FilmsMainCard("More like this",
+            filmsSubInfoList: filmDetails.similars),
+        // _VideosCard(filmDetails: filmDetails),
+        if (filmDetails.images?.items.isNotEmpty ?? false)
+          _PhotosCard(filmDetails: filmDetails),
+        _AwardsCard(filmDetails: filmDetails),
+        _UserReviews(filmDetails: filmDetails),
+        _CriticReviews(filmDetails: filmDetails),
+        _GuideOfParents(filmDetails: filmDetails),
+        _DidYouKnow(filmDetails: filmDetails),
+        _StoryLine(filmDetails: filmDetails),
+        _KeywordsCard(filmDetails: filmDetails),
+        _DetailsCard(filmDetails: filmDetails),
+        if (filmDetails.subBoxOffice != null)
+          _BoxOfficeCard(filmDetails: filmDetails),
+        // const _TechnicalSpaces(),
+        _FilmsMainCard("More from Tom Cruise (Actor)",
+            filmsSubInfoList: filmDetails.similars),
+        _FilmsMainCard("More from Joseph Kosinski (Director)",
+            filmsSubInfoList: filmDetails.similars),
+        _FilmsMainCard("More drama picks",
+            filmsSubInfoList: filmDetails.similars),
+        const RSizedBox(height: 0)
+      ];
+  AppBar appBar(FilmDetails filmDetails) {
     return AppBar(
       title: Text(
-        "Top Gun: Maverick",
+        filmDetails.title,
         softWrap: true,
         overflow: TextOverflow.ellipsis,
         style: getMediumStyle(fontSize: 20),
@@ -66,8 +93,8 @@ class FilmDetailsPage extends StatelessWidget {
 }
 
 class _CastInfo extends StatelessWidget {
-  const _CastInfo({Key? key}) : super(key: key);
-
+  const _CastInfo({Key? key, required this.filmDetails}) : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -89,13 +116,22 @@ class _CastInfo extends StatelessWidget {
             child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => Padding(
-                      padding: REdgeInsetsDirectional.only(
-                          start: index == 0 ? horizontalPadding : 8,
-                          end: index == 9 ? horizontalPadding : 0),
-                      child: const Center(child: ActorBirthdayCard()),
-                    ),
-                itemCount: 10),
+                itemBuilder: (context, index) {
+                  ActorList actorDetails = filmDetails.actorList[index];
+                  return Padding(
+                    padding: REdgeInsetsDirectional.only(
+                        start: index == 0 ? horizontalPadding : 8,
+                        end: index == 9 ? horizontalPadding : 0),
+                    child: Center(
+                        child: ActorCard(
+                      actorId: actorDetails.id,
+                      imageUrl: actorDetails.image,
+                      title: actorDetails.name,
+                      subTitle: actorDetails.asCharacter,
+                    )),
+                  );
+                },
+                itemCount: filmDetails.actorList.length),
           ),
           Padding(
             padding: REdgeInsets.all(horizontalPadding),
@@ -103,84 +139,28 @@ class _CastInfo extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Director", style: getNormalStyle(fontSize: 17)),
-                Text("Joseph Kosinski",
+                Text(filmDetails.directors,
                     style: getNormalStyle(
                         fontSize: 14, color: ColorManager.black54)),
                 const RSizedBox(height: 20),
                 Text("Writers", style: getNormalStyle(fontSize: 17)),
-                Text("Joseph Kosinski" * 10,
+                Text(filmDetails.writers,
                     softWrap: true,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: getNormalStyle(
                         fontSize: 14, color: ColorManager.black54)),
                 const RSizedBox(height: 30),
-                Text("ALL CAST & CREW",
-                    style: getMediumStyle(
-                        fontSize: 15, color: ColorManager.darkBlue)),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _VideosCard extends StatelessWidget {
-  const _VideosCard();
-
-  @override
-  Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    return FloatingContainer(
-      height: screenHeight / 1.5,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const GoldTitleOfMainCard(title: "Videos"),
-          const RSizedBox(height: 30),
-          Padding(
-            padding: REdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
                 GestureDetector(
                   onTap: () {
-                    Go(context).to(const VideoWatchPage(), withoutRoot: true);
+                    /// Todo: push to ALL CAST & CREW
                   },
-                  child: Container(
-                    height: 210.h,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: ColorManager.teal,
-                        borderRadius: BorderRadius.circular(10.r),
-                        boxShadow: customBoxShadows()),
-                  ),
+                  child: Text("ALL CAST & CREW",
+                      style: getMediumStyle(
+                          fontSize: 15, color: ColorManager.darkBlue)),
                 ),
-                Padding(
-                    padding: REdgeInsets.all(15.0),
-                    child: const PlayIconWithTime()),
               ],
             ),
-          ),
-          Padding(
-            padding: REdgeInsets.symmetric(
-                horizontal: horizontalPadding, vertical: horizontalPadding),
-            child:
-                Text("Official Trailer 2", style: getNormalStyle(fontSize: 16)),
-          ),
-          Flexible(
-            child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => Padding(
-                    padding: REdgeInsetsDirectional.only(
-                        start: index == 0 ? horizontalPadding : 10,
-                        end: index == 9 ? horizontalPadding : 0),
-                    child: const Center(child: _ThumbnailTrailerCard())),
-                itemCount: 10),
           ),
         ],
       ),
@@ -189,40 +169,47 @@ class _VideosCard extends StatelessWidget {
 }
 
 class _PhotosCard extends StatelessWidget {
-  const _PhotosCard();
-
+  const _PhotosCard({Key? key, required this.filmDetails}) : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenHeight = screenSize.height;
     double screenWidth = screenSize.width;
+    List<Items> imagesList = filmDetails.images?.items ?? [];
+    int imagesLength = imagesList.length;
 
     return FloatingContainer(
       height: screenHeight / 2.95,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const GoldTitleOfMainCard(title: "Photos"),
+          GoldTitleOfMainCard(title: "Photos", subTitle: "$imagesLength"),
           Flexible(
             child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => Padding(
-                      padding: REdgeInsetsDirectional.only(
-                          start: index == 0 ? horizontalPadding : 10,
-                          end: index == 9 ? horizontalPadding : 0),
-                      child: Center(
-                        child: Container(
-                          height: 155.h,
-                          width: screenWidth / 1.33,
-                          decoration: BoxDecoration(
-                              color: ColorManager.teal,
-                              borderRadius: BorderRadius.circular(10.r),
-                              boxShadow: customBoxShadows()),
-                        ),
+                itemBuilder: (context, index) {
+                  String imageUrl = imagesList[index].image;
+                  return Padding(
+                    padding: REdgeInsetsDirectional.only(
+                        start: index == 0 ? horizontalPadding : 10,
+                        end: index == 9 ? horizontalPadding : 0),
+                    child: Center(
+                      child: Container(
+                        height: 155.h,
+                        width: screenWidth / 1.33,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.r),
+                            boxShadow: customBoxShadows()),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10.r),
+                            child: Image.network(imageUrl, fit: BoxFit.cover)),
                       ),
                     ),
-                itemCount: 10),
+                  );
+                },
+                itemCount: imagesLength),
           ),
         ],
       ),
@@ -230,63 +217,17 @@ class _PhotosCard extends StatelessWidget {
   }
 }
 
-class _ThumbnailTrailerCard extends StatelessWidget {
-  const _ThumbnailTrailerCard({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Go(context).to(const VideoWatchPage(), withoutRoot: true);
-      },
-      child: Container(
-        height: 140.h,
-        width: 140.w,
-        decoration: BoxDecoration(
-            color: ColorManager.white,
-            borderRadius: BorderRadius.circular(10.r),
-            boxShadow: customBoxShadows()),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: 90.h,
-              child: Stack(
-                alignment: Alignment.bottomLeft,
-                children: [
-                  const SizedBox(width: double.infinity, child: StaticImage()),
-                  Padding(
-                      padding: REdgeInsets.all(5.0),
-                      child: const PlayIconWithTime()),
-                ],
-              ),
-            ),
-            Padding(
-              padding: REdgeInsets.symmetric(horizontal: 10, vertical: 7),
-              child: Text(
-                "Big Game Spot " * 5,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                style: getNormalStyle(fontSize: 13),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _AwardsCard extends StatelessWidget {
-  const _AwardsCard();
-
+  const _AwardsCard({Key? key, required this.filmDetails}) : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenHeight = screenSize.height;
-
+    List<String> firstList = filmDetails.awards.split(" | ");
+    String topFilm = firstList.isNotEmpty ? firstList[0] : "";
+    List<String> secondList =
+        firstList.length > 1 ? firstList[1].split(", ") : [];
     return FloatingContainer(
       height: screenHeight / 4.7,
       child: Column(
@@ -294,16 +235,25 @@ class _AwardsCard extends StatelessWidget {
         children: [
           const GoldTitleOfMainCard(title: "Awards"),
           const RSizedBox(height: 10),
-          Padding(
-            padding: REdgeInsets.symmetric(
-                horizontal: horizontalPadding, vertical: 20),
-            child:
-                Text("Top 250 movies #82", style: getNormalStyle(fontSize: 17)),
-          ),
+          if (topFilm.isNotEmpty)
+            Padding(
+              padding: REdgeInsets.symmetric(
+                  horizontal: horizontalPadding, vertical: 20),
+              child: Text(topFilm, style: getNormalStyle(fontSize: 18)),
+            ),
           Padding(
             padding: REdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: Text("4 wins & 16 nominations",
-                style: getNormalStyle(fontSize: 17)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (secondList.isNotEmpty || secondList[0].isNotEmpty)
+                  Text(secondList[0], style: getNormalStyle(fontSize: 18)),
+                if (secondList.length > 1 || secondList[1].isNotEmpty)
+                  Text(secondList[1],
+                      style: getNormalStyle(
+                          fontSize: 16, color: ColorManager.grey)),
+              ],
+            ),
           ),
         ],
       ),
@@ -312,8 +262,8 @@ class _AwardsCard extends StatelessWidget {
 }
 
 class _UserReviews extends StatelessWidget {
-  const _UserReviews();
-
+  const _UserReviews({Key? key, required this.filmDetails}) : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -344,7 +294,7 @@ class _UserReviews extends StatelessWidget {
                           TextSpan(
                             children: <TextSpan>[
                               TextSpan(
-                                  text: "8.4",
+                                  text: filmDetails.imDbRating,
                                   style: getNormalStyle(fontSize: 30)),
                               TextSpan(
                                 style: getNormalStyle(fontSize: 15),
@@ -427,8 +377,8 @@ class _UserReviews extends StatelessWidget {
 }
 
 class _CriticReviews extends StatelessWidget {
-  const _CriticReviews();
-
+  const _CriticReviews({Key? key, required this.filmDetails}) : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -492,8 +442,9 @@ class _CriticReviews extends StatelessWidget {
 }
 
 class _GuideOfParents extends StatefulWidget {
-  const _GuideOfParents();
-
+  const _GuideOfParents({Key? key, required this.filmDetails})
+      : super(key: key);
+  final FilmDetails filmDetails;
   @override
   State<_GuideOfParents> createState() => _GuideOfParentsState();
 }
@@ -583,8 +534,8 @@ class _GuideOfParentsState extends State<_GuideOfParents> {
 }
 
 class _DidYouKnow extends StatelessWidget {
-  const _DidYouKnow();
-
+  const _DidYouKnow({Key? key, required this.filmDetails}) : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -632,21 +583,22 @@ class _DidYouKnow extends StatelessWidget {
 }
 
 class _StoryLine extends StatelessWidget {
-  const _StoryLine();
-
+  const _StoryLine({Key? key, required this.filmDetails}) : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    double screenHeight = screenSize.height;
-
     return FloatingContainer(
-      height: screenHeight / 2.45,
+      height: -1,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const GoldTitleOfMainCard(title: "Storyline", withoutSeeAll: true),
           const RSizedBox(height: 10),
-          const _TitleAndSubTitleTexts(),
+          _TitleAndSubTitleTexts(
+            title: "Plot Summary",
+            subTitle: filmDetails.plot,
+          ),
           const Divider(color: ColorManager.grey),
           const _TitleAndSubTitleTexts(
               title: "Tagline",
@@ -660,23 +612,18 @@ class _StoryLine extends StatelessWidget {
             child: Text("Genres", style: getNormalStyle(fontSize: 16)),
           ),
           const RSizedBox(height: 10),
-          Row(
-            children: [
-              ...List.generate(
-                2,
-                (index) => Padding(
-                  padding:
-                      REdgeInsetsDirectional.only(start: horizontalPadding),
-                  child: SizedBox(
-                      width: 70,
-                      height: 35,
-                      child: _RoundedActionContainer(
-                        text: index == 1 ? "Drama" : "Action",
-                      )),
-                ),
-              )
-            ],
+          SizedBox(
+            height: 40.h,
+            width: double.infinity,
+            child: ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => _RoundedActionContainer(
+                    text: filmDetails.genreList[index].value),
+                separatorBuilder: (context, index) => const RSizedBox(width: 8),
+                itemCount: filmDetails.genreList.length),
           ),
+          const RSizedBox(height: 15),
         ],
       ),
     );
@@ -684,15 +631,15 @@ class _StoryLine extends StatelessWidget {
 }
 
 class _KeywordsCard extends StatelessWidget {
-  const _KeywordsCard();
-
+  const _KeywordsCard({Key? key, required this.filmDetails}) : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenHeight = screenSize.height;
 
     return FloatingContainer(
-      height: screenHeight / 2.5,
+      height: screenHeight / 3.3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -713,31 +660,11 @@ class _KeywordsCard extends StatelessWidget {
                   child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) =>
-                          _RoundedActionContainer(text: listOfText()[index]),
+                      itemBuilder: (context, index) => _RoundedActionContainer(
+                          text: filmDetails.genreList[index].value),
                       separatorBuilder: (context, index) =>
                           const RSizedBox(width: 8),
-                      itemCount: 10),
-                ),
-
-                ///------------------------------------->
-
-                Padding(
-                  padding: REdgeInsets.symmetric(vertical: 10),
-                  child: Text("PLOT TIMEFRAMES",
-                      style: getMediumStyle(fontSize: 15)),
-                ),
-                SizedBox(
-                  height: 40.h,
-                  width: double.infinity,
-                  child: ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) =>
-                          _RoundedActionContainer(text: listOfText()[index]),
-                      separatorBuilder: (context, index) =>
-                          const RSizedBox(width: 8),
-                      itemCount: 2),
+                      itemCount: filmDetails.genreList.length),
                 ),
 
                 ///------------------------------------->
@@ -752,11 +679,11 @@ class _KeywordsCard extends StatelessWidget {
                   child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) =>
-                          _RoundedActionContainer(text: listOfText()[index]),
+                      itemBuilder: (context, index) => _RoundedActionContainer(
+                          text: filmDetails.keywordList[index]),
                       separatorBuilder: (context, index) =>
                           const RSizedBox(width: 8),
-                      itemCount: 10),
+                      itemCount: filmDetails.keywordList.length),
                 ),
               ],
             ),
@@ -786,34 +713,28 @@ List<String> listOfText() => [
     ];
 
 class _DetailsCard extends StatelessWidget {
-  const _DetailsCard();
-
+  const _DetailsCard({Key? key, required this.filmDetails}) : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenHeight = screenSize.height;
 
     return FloatingContainer(
-      height: screenHeight / 2.15,
+      height: screenHeight / 3.15,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          GoldTitleOfMainCard(title: "Details", withoutSeeAll: true),
-          RSizedBox(height: 10),
+        children: [
+          const GoldTitleOfMainCard(title: "Details", withoutSeeAll: true),
+          const RSizedBox(height: 10),
           _TitleAndSubTitleTexts(
-              title: "Release Date", subTitle: "May 27 , 2022"),
-          Divider(color: ColorManager.grey),
+              title: "Release Date", subTitle: filmDetails.releaseDate),
+          const Divider(color: ColorManager.grey),
           _TitleAndSubTitleTexts(
-              title: "Country of Origin", subTitle: "United States"),
-          Divider(color: ColorManager.grey),
-          _TitleAndSubTitleTexts(title: "Language Spoken", subTitle: "English"),
-          Divider(color: ColorManager.grey),
+              title: "Country of Origin", subTitle: filmDetails.countries),
+          const Divider(color: ColorManager.grey),
           _TitleAndSubTitleTexts(
-              title: "Also know as",
-              subTitle: "Top Gun: Maverick (Romania),..."),
-          Divider(color: ColorManager.grey),
-          _TitleAndSubTitleTexts(
-              title: "Country of Origin", subTitle: "United States"),
+              title: "Language Spoken", subTitle: filmDetails.languages),
         ],
       ),
     );
@@ -821,61 +742,33 @@ class _DetailsCard extends StatelessWidget {
 }
 
 class _BoxOfficeCard extends StatelessWidget {
-  const _BoxOfficeCard();
-
+  const _BoxOfficeCard({Key? key, required this.filmDetails}) : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenHeight = screenSize.height;
-
+    SubBoxOffice? boxOffice = filmDetails.subBoxOffice;
     return FloatingContainer(
       height: screenHeight / 2.75,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          GoldTitleOfMainCard(title: "Box office"),
-          RSizedBox(height: 10),
+        children: [
+          const GoldTitleOfMainCard(title: "Box office"),
+          const RSizedBox(height: 10),
           _TitleAndSubTitleTexts(
-              title: "Budget", subTitle: "\$170,000,000 (estimated)"),
-          Divider(color: ColorManager.grey),
+              title: "Budget", subTitle: boxOffice?.budget ?? ""),
+          const Divider(color: ColorManager.grey),
           _TitleAndSubTitleTexts(
-              title: "Opening weekend", subTitle: "\$152,578,485 (domestic)"),
-          Divider(color: ColorManager.grey),
+              title: "Opening weekend",
+              subTitle: boxOffice?.openingWeekendUSA ?? ""),
+          const Divider(color: ColorManager.grey),
           _TitleAndSubTitleTexts(
-              title: "Gross", subTitle: "\$716,578,432 (domestic)"),
-          Divider(color: ColorManager.grey),
+              title: "Gross", subTitle: boxOffice?.grossUSA ?? ""),
+          const Divider(color: ColorManager.grey),
           _TitleAndSubTitleTexts(
-              title: "Worldwide gross", subTitle: "\$1,425,436,346"),
-        ],
-      ),
-    );
-  }
-}
-
-class _TechnicalSpaces extends StatelessWidget {
-  const _TechnicalSpaces();
-
-  @override
-  Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    double screenHeight = screenSize.height;
-
-    return FloatingContainer(
-      height: screenHeight / 2.75,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          GoldTitleOfMainCard(title: "Technical spaces"),
-          RSizedBox(height: 10),
-          _TitleAndSubTitleTexts(title: "Runtime", subTitle: "2h 10m"),
-          Divider(color: ColorManager.grey),
-          _TitleAndSubTitleTexts(title: "Sound Mix", subTitle: "DTS (DTS: X)"),
-          Divider(color: ColorManager.grey),
-          _TitleAndSubTitleTexts(title: "Color", subTitle: "Color"),
-          Divider(color: ColorManager.grey),
-          _TitleAndSubTitleTexts(
-              title: "Aspect Ratio",
-              subTitle: "1.90 : 1 (IMAX Version - some scenes)"),
+              title: "Worldwide gross",
+              subTitle: boxOffice?.cumulativeWorldwideGross ?? ""),
         ],
       ),
     );
@@ -912,8 +805,9 @@ class _TitleAndSubTitleTexts extends StatelessWidget {
 }
 
 class _MainFilmInfoCard extends StatelessWidget {
-  const _MainFilmInfoCard({Key? key}) : super(key: key);
-
+  const _MainFilmInfoCard({Key? key, required this.filmDetails})
+      : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -924,14 +818,14 @@ class _MainFilmInfoCard extends StatelessWidget {
         padding: REdgeInsets.symmetric(vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            _FilmTitleAndSubNumbersInfo(),
-            FilmTrailerPreview(),
-            _PosterAndSubInfo(),
-            _AddToWatchListButton(),
-            RSizedBox(height: 5),
-            Divider(color: ColorManager.grey),
-            _ScoresWidgets(),
+          children: [
+            _FilmTitleAndSubNumbersInfo(filmDetails),
+            FilmTrailerPreview(filmDetails),
+            _PosterAndSubInfo(filmDetails),
+            const _AddToWatchListButton(),
+            const RSizedBox(height: 5),
+            const Divider(color: ColorManager.grey),
+            _ScoresWidgets(filmDetails),
           ],
         ),
       ),
@@ -940,40 +834,45 @@ class _MainFilmInfoCard extends StatelessWidget {
 }
 
 class _ScoresWidgets extends StatelessWidget {
-  const _ScoresWidgets({
-    Key? key,
-  }) : super(key: key);
+  const _ScoresWidgets(this.filmDetails);
+  final FilmDetails filmDetails;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: const [_RatingInfo(), _RateThis(), _Metascore()],
+      children: [
+        _RatingInfo(filmDetails),
+        _RateThis(filmDetails),
+        _Metascore(filmDetails),
+      ],
     );
   }
 }
 
 class _Metascore extends StatelessWidget {
-  const _Metascore({Key? key}) : super(key: key);
-
+  const _Metascore(this.filmDetails);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Icon(Icons.square, color: ColorManager.green, size: 30),
+        Container(
+          padding: REdgeInsets.all(5),
+          color: ColorManager.green,
+          child: Text(filmDetails.metacriticRating,
+              style: getNormalStyle(color: ColorManager.white)),
+        ),
+        const RSizedBox(height: 10),
         Text("Metascore", style: getNormalStyle(fontSize: 13)),
-        Text("63 critics",
-            style: getNormalStyle(fontSize: 13, color: ColorManager.grey))
       ],
     );
   }
 }
 
 class _RateThis extends StatelessWidget {
-  const _RateThis({
-    Key? key,
-  }) : super(key: key);
-
+  const _RateThis(this.filmDetails);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -990,8 +889,8 @@ class _RateThis extends StatelessWidget {
 }
 
 class _RatingInfo extends StatelessWidget {
-  const _RatingInfo({Key? key}) : super(key: key);
-
+  const _RatingInfo(this.filmDetails);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -1000,7 +899,9 @@ class _RatingInfo extends StatelessWidget {
         Text.rich(
           TextSpan(
             children: <TextSpan>[
-              TextSpan(text: "8.4", style: getBoldStyle(fontSize: 20)),
+              TextSpan(
+                  text: filmDetails.imDbRating,
+                  style: getBoldStyle(fontSize: 20)),
               TextSpan(
                 style: getNormalStyle(fontSize: 15),
                 text: "/10",
@@ -1008,7 +909,7 @@ class _RatingInfo extends StatelessWidget {
             ],
           ),
         ),
-        Text("436,655",
+        Text(filmDetails.imDbRatingVotes,
             style: getNormalStyle(fontSize: 13, color: ColorManager.grey))
       ],
     );
@@ -1066,7 +967,8 @@ class _AddToWatchListButtonState extends State<_AddToWatchListButton> {
 }
 
 class _PosterAndSubInfo extends StatelessWidget {
-  const _PosterAndSubInfo({Key? key}) : super(key: key);
+  const _PosterAndSubInfo(this.filmDetails);
+  final FilmDetails filmDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -1077,10 +979,10 @@ class _PosterAndSubInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             width: 108.w,
             height: 160.h,
-            color: ColorManager.blackYellow,
+            child: Image.network(filmDetails.image, fit: BoxFit.cover),
           ),
           const RSizedBox(width: horizontalPadding),
           Flexible(
@@ -1094,15 +996,17 @@ class _PosterAndSubInfo extends StatelessWidget {
                   child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) =>
-                          const _RoundedActionContainer(),
+                      itemBuilder: (context, index) {
+                        GenreList genre = filmDetails.genreList[index];
+                        return _RoundedActionContainer(text: genre.value);
+                      },
                       separatorBuilder: (context, index) =>
                           const RSizedBox(width: 8),
-                      itemCount: 10),
+                      itemCount: filmDetails.genreList.length),
                 ),
                 const RSizedBox(height: 15),
                 Text(
-                  "After thirty years" * 10,
+                  filmDetails.plot,
                   softWrap: true,
                   maxLines: 5,
                   overflow: TextOverflow.ellipsis,
@@ -1142,30 +1046,31 @@ class _RoundedActionContainer extends StatelessWidget {
 }
 
 class FilmTrailerPreview extends StatelessWidget {
-  const FilmTrailerPreview({
-    Key? key,
-  }) : super(key: key);
-
+  const FilmTrailerPreview(this.filmDetails, {Key? key}) : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
+    String url = filmDetails.trailer?.thumbnailUrl ?? "";
     return Container(
-      color: ColorManager.teal,
+      color: ColorManager.lightGrey,
       width: double.infinity,
       height: 225.h,
+      child: url.isNotEmpty ? Image.network(url) : null,
     );
   }
 }
 
 class _FilmTitleAndSubNumbersInfo extends StatelessWidget {
-  const _FilmTitleAndSubNumbersInfo({Key? key}) : super(key: key);
-
+  const _FilmTitleAndSubNumbersInfo(this.filmDetails, {Key? key})
+      : super(key: key);
+  final FilmDetails filmDetails;
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
         padding: REdgeInsets.symmetric(horizontal: horizontalPadding),
         child: Text(
-          "Top Gun: Maverick",
+          filmDetails.title,
           softWrap: true,
           overflow: TextOverflow.ellipsis,
           style: getNormalStyle(fontSize: 35),
@@ -1175,10 +1080,74 @@ class _FilmTitleAndSubNumbersInfo extends StatelessWidget {
         padding:
             REdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 5),
         child: Text(
-          "2022  PG-13  2h 10m",
+          "${filmDetails.year}  ${filmDetails.contentRating}  ${filmDetails.runtimeStr}",
           style: getNormalStyle(fontSize: 15, color: ColorManager.grey),
         ),
       ),
     ]);
+  }
+}
+
+class _FilmsMainCard extends StatelessWidget {
+  final String title;
+  const _FilmsMainCard(this.title, {required this.filmsSubInfoList});
+  final List<Similars> filmsSubInfoList;
+  @override
+  Widget build(BuildContext context) {
+    return FloatingContainer(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GoldTitleOfMainCard(title: title),
+          Padding(
+            padding: REdgeInsetsDirectional.only(
+                bottom: verticalPadding, start: verticalPadding),
+            child: Text(
+              "This week's top TV and movies",
+              style: getNormalStyle(fontSize: 15, color: ColorManager.grey),
+            ),
+          ),
+          SizedBox(
+            height: 35.h,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              children: const [
+                RSizedBox(width: horizontalPadding),
+                SuggestionFilteredContainer(),
+                RSizedBox(width: horizontalPadding),
+                SuggestionFilteredContainer(),
+                RSizedBox(width: horizontalPadding),
+                SuggestionFilteredContainer(),
+                RSizedBox(width: horizontalPadding),
+              ],
+            ),
+          ),
+          Flexible(
+            child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  Similars info = filmsSubInfoList[index];
+
+                  return Padding(
+                    padding: REdgeInsetsDirectional.only(
+                        start: index == 0 ? horizontalPadding : 8,
+                        end: index == 9 ? horizontalPadding : 0),
+                    child: Center(
+                        child: FilmCard(
+                      filmId: info.id,
+                      imageUrl: info.image,
+                      imdbRating: info.imDbRating,
+                      title: info.title,
+                    )),
+                  );
+                },
+                itemCount: filmsSubInfoList.length),
+          ),
+        ],
+      ),
+    );
   }
 }

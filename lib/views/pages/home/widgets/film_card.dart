@@ -8,7 +8,23 @@ import 'package:imdb/views/pages/film_details/film_details_page.dart';
 import 'package:imdb/views/pages/home/widgets/add_to_wach_list.dart';
 
 class FilmCard extends StatelessWidget {
-  const FilmCard({super.key});
+  const FilmCard({
+    super.key,
+    this.imageUrl = "",
+    this.filmId = "",
+    this.imdbRating = "",
+    this.title = "",
+    this.year = "",
+    this.time = "",
+    this.category = "",
+  });
+  final String filmId;
+  final String imageUrl;
+  final String imdbRating;
+  final String title;
+  final String year;
+  final String time;
+  final String category;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +35,7 @@ class FilmCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Go(context).to(const FilmDetailsPage());
+        Go(context).to(FilmDetailsPage(filmId: filmId));
       },
       child: Container(
         height: screenHeightOver3,
@@ -33,48 +49,57 @@ class FilmCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.r),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Stack(
                 children: [
                   SizedBox(
                     height: screenHeightOver3 / 1.72,
                     width: double.infinity,
-                    child: const StaticImage(),
+                    child: Image.network(imageUrl, fit: BoxFit.cover),
                   ),
                   const Align(
                       alignment: Alignment.topLeft, child: AddToWatchList()),
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.all(horizontalPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.star,
-                            color: ColorManager.blackYellow, size: 18),
-                        const SizedBox(width: 5),
-                        Text("${5.7}", style: getNormalStyle(fontSize: 15)),
+              Flexible(
+                child: Padding(
+                  padding: EdgeInsets.all(horizontalPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (imdbRating.isNotEmpty) ...[
+                        Row(
+                          children: [
+                            const Icon(Icons.star,
+                                color: ColorManager.blackYellow, size: 18),
+                            const SizedBox(width: 5),
+                            Text(imdbRating,
+                                style: getNormalStyle(fontSize: 15)),
+                          ],
+                        ),
                       ],
-                    ),
-                    SizedBox(height: verticalPadding),
-                    Text(
-                      "The people We" * 5,
-                      maxLines: 2,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: getNormalStyle(fontSize: 15),
-                    ),
-                    SizedBox(height: verticalPadding),
-                    Text("2022  R  1h 39m",
-                        style: getNormalStyle(
-                            fontSize: 12, color: ColorManager.black54)),
-                    SizedBox(height: horizontalPadding),
-                    const _ShowTimeButton(),
-                  ],
+                      SizedBox(height: verticalPadding),
+                      Text(
+                        title,
+                        maxLines: 2,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: getNormalStyle(fontSize: 15),
+                      ),
+                      SizedBox(height: verticalPadding),
+                      Text("$year  $category  $time",
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: getNormalStyle(
+                              fontSize: 12, color: ColorManager.black54)),
+                    ],
+                  ),
                 ),
               ),
+              const _ShowTimeButton(),
             ],
           ),
         ),
@@ -100,12 +125,15 @@ class _ShowTimeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      style: outlinedStyle(),
-      onPressed: () {},
-      child: Text(
-        "Show time",
-        style: getNormalStyle(fontSize: 13, color: ColorManager.darkBlue),
+    return Padding(
+      padding: EdgeInsets.only(left: 7.w, right: 7.w, bottom: 7.w),
+      child: OutlinedButton(
+        style: outlinedStyle(),
+        onPressed: () {},
+        child: Text(
+          "Add to Watchlist",
+          style: getNormalStyle(fontSize: 13, color: ColorManager.darkBlue),
+        ),
       ),
     );
   }

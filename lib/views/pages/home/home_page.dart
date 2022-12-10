@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:imdb/helper/functions/network_exceptions.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
+import 'package:imdb/helper/routes/route_app.dart';
+import 'package:imdb/view_models/box_office/box_office_items.dart';
+import 'package:imdb/view_models/in_theaters/new_film_details.dart';
+import 'package:imdb/views/bloc/box_office/box_office_cubit.dart';
+import 'package:imdb/views/bloc/cubit_result_state.dart';
+import 'package:imdb/views/bloc/new_films/new_films.dart';
+import 'package:imdb/views/common_widgets/custom_circulars_progress.dart';
 import 'package:imdb/views/common_widgets/films_main_floating_container.dart';
 import 'package:imdb/views/common_widgets/floating_container.dart';
 import 'package:imdb/views/common_widgets/gold_title_of_main_card.dart';
-import 'package:imdb/views/pages/home/widgets/actor_birth_day_card.dart';
+import 'package:imdb/views/pages/film_details/film_details_page.dart';
+import 'package:imdb/views/pages/home/widgets/actor_card.dart';
 import 'package:imdb/views/pages/home/widgets/add_to_wach_list.dart';
 import 'package:imdb/views/pages/home/widgets/film_card.dart';
 
@@ -58,17 +68,20 @@ class HomePage extends StatelessWidget {
                 child: const Center(child: Text("Not now")),
               ),
               const _MainTitle("What to watch"),
-              const FilmsMainCard("From your watchlist"),
+              // const FilmsMainCard("From your watchlist"),
               const RSizedBox(height: _verticalPadding),
-              const FilmsMainCard("Fan favorites"),
+              // const FilmsMainCard("Fan favorites"),
               const _MainTitle("Explore movies and TV shows"),
-              const FilmsMainCard("In theaters"),
+              _InTheaters(false,
+                  bloc: NewFilmsCubit.get(context)..getInTheaters()),
               const RSizedBox(height: _verticalPadding),
-              const FilmsMainCard("Coming soon"),
+              _InTheaters(true,
+                  bloc: NewFilmsCubit.get(context)..getComingSoon()),
               const RSizedBox(height: _verticalPadding),
               const _TopBoxOfficeCard(),
               const RSizedBox(height: _verticalPadding),
-              const FilmsMainCard("Watch soon at home"),
+              _InTheaters(true,
+                  bloc: NewFilmsCubit.get(context)..getComingSoon()),
               const _BornTodayMainCard(),
               const RSizedBox(height: _verticalPadding * 25),
             ],
@@ -79,12 +92,68 @@ class HomePage extends StatelessWidget {
   }
 }
 
+class _InTheaters extends StatelessWidget {
+  final bool isThatComingSoon;
+  final NewFilmsCubit bloc;
+  const _InTheaters(this.isThatComingSoon, {required this.bloc});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: BlocBuilder<NewFilmsCubit, ResultState<NewFilmDetails>>(
+        bloc: bloc,
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, ResultState<NewFilmDetails> state) {
+          return state.when(
+            initial: () => const CustomCircularProgress(),
+            loading: () => const CustomCircularProgress(),
+            success: (NewFilmDetails data) {
+              return FilmsMainCard(
+                  isThatComingSoon ? "Coming soon" : "In theaters",
+                  filmItems: data.items);
+            },
+            error: (e) {
+              return Text(NetworkExceptions.getErrorMessage(e));
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
 class _TopBoxOfficeCard extends StatelessWidget {
   const _TopBoxOfficeCard();
 
   @override
   Widget build(BuildContext context) {
+    return Center(
+      child: BlocBuilder<BoxOfficeCubit, BoxOfficeState>(
+        bloc: BoxOfficeCubit.get(context)..getBoxOffice(),
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, BoxOfficeState state) {
+          if (state is CubitBoxOfficeLoaded) {
+            return _TopBoxOfficeBody(state.details.items);
+          } else if (state is CubitFailed) {
+            return Text(NetworkExceptions.getErrorMessage(state.error));
+          } else {
+            return const CustomCircularProgress();
+          }
+        },
+      ),
+    );
+  }
+}
+
+class _TopBoxOfficeBody extends StatelessWidget {
+  const _TopBoxOfficeBody(this.boxOfficeItems);
+  final List<BoxOfficeItems>? boxOfficeItems;
+
+  @override
+  Widget build(BuildContext context) {
+    int length = boxOfficeItems?.length ?? 0;
     return FloatingContainer(
+      height: -1,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,45 +174,57 @@ class _TopBoxOfficeCard extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 primary: false,
-                itemBuilder: (context, index) => Row(
-                  children: [
-                    Text("${index + 1}"),
-                    SizedBox(width: 10.w),
-                    const AddToWatchList(),
-                    SizedBox(width: 10.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Black Panther:Wakanda Foreever" * 5,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: getNormalStyle(fontSize: 15),
+                itemBuilder: (context, index) {
+                  BoxOfficeItems? item = boxOfficeItems?[index];
+                  return GestureDetector(
+                    onTap: () {
+                      String id = item?.id ?? "";
+                      if (id.isNotEmpty) {
+                        Go(context).to(FilmDetailsPage(filmId: id));
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        Text("${index + 1}"),
+                        SizedBox(width: 10.w),
+                        const AddToWatchList(),
+                        SizedBox(width: 10.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item?.title ?? "",
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: getNormalStyle(fontSize: 15),
+                              ),
+                              Text(
+                                item?.weekend ?? "",
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: getNormalStyle(
+                                    fontSize: 15, color: ColorManager.grey),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "\$45.5M",
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: getNormalStyle(
-                                fontSize: 15, color: ColorManager.grey),
-                          ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(width: 10.w),
+                        const Icon(
+                          Icons.battery_charging_full_rounded,
+                          color: ColorManager.darkBlue,
+                        )
+                      ],
                     ),
-                    SizedBox(width: 10.w),
-                    const Icon(
-                      Icons.battery_charging_full_rounded,
-                      color: ColorManager.darkBlue,
-                    )
-                  ],
-                ),
-                itemCount: 6,
+                  );
+                },
+                itemCount: length >= 7 ? 7 : length,
                 separatorBuilder: (context, index) =>
                     const RSizedBox(height: 18),
               ),
             ),
-          )
+          ),
+          const RSizedBox(height: 15),
         ],
       ),
     );
@@ -187,7 +268,7 @@ class _BornTodayMainCard extends StatelessWidget {
                       padding: REdgeInsetsDirectional.only(
                           start: index == 0 ? _horizontalPadding : 8,
                           end: index == 9 ? _horizontalPadding : 0),
-                      child: const Center(child: ActorBirthdayCard()),
+                      child: const Center(child: ActorCard()),
                     ),
                 itemCount: 10),
           ),

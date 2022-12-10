@@ -2,10 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
-import 'package:imdb/views/pages/home/widgets/film_card.dart';
 
-class ActorBirthdayCard extends StatelessWidget {
-  const ActorBirthdayCard({super.key});
+class ActorCard extends StatelessWidget {
+  final String actorId;
+  final String imageUrl;
+  final String title;
+  final String subTitle;
+
+  const ActorCard({
+    super.key,
+    this.actorId = "",
+    this.imageUrl = "",
+    this.subTitle = "",
+    this.title = "",
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,23 +40,24 @@ class ActorBirthdayCard extends StatelessWidget {
             SizedBox(
               height: screenHeightOver3 / 1.45,
               width: double.infinity,
-              child: const StaticImage(),
+              child: Image.network(imageUrl, fit: BoxFit.cover),
             ),
             SizedBox(height: horizontalPadding),
             Padding(
               padding: REdgeInsetsDirectional.only(start: verticalPadding),
-              child: Text("Ahmed Abdo",
+              child: Text(title,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                   style:
-                      getNormalStyle(fontSize: 15, color: ColorManager.black)),
+                      getNormalStyle(fontSize: 18, color: ColorManager.black)),
             ),
             const Spacer(),
             Padding(
               padding: REdgeInsetsDirectional.only(start: verticalPadding),
-              child: Text("21",
+              child: Text(subTitle,
                   style: getNormalStyle(
-                      fontSize: 12, color: ColorManager.black54)),
+                      fontSize: 15, color: ColorManager.black54)),
             ),
             SizedBox(height: horizontalPadding),
           ],

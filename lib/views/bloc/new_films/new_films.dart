@@ -6,7 +6,7 @@ import 'package:imdb/repositories/new_films_repo.dart';
 import 'package:imdb/view_models/in_theaters/new_film_details.dart';
 import 'package:imdb/views/bloc/cubit_result_state.dart';
 
-class NewFilmsCubit extends Cubit<ResultState<dynamic>> {
+class NewFilmsCubit extends Cubit<ResultState<NewFilmDetails>> {
   final NewFilmsRepo _newFilmsRepo;
   NewFilmsCubit(this._newFilmsRepo) : super(const initial());
   static NewFilmsCubit get(BuildContext context) => BlocProvider.of(context);

@@ -75,7 +75,7 @@ class _VideosCard extends StatelessWidget {
                       child: Center(
                         child: GestureDetector(
                           onTap: () {
-                            Go(context).to(const FilmDetailsPage());
+                            // Go(context).to(const FilmDetailsPage());
                           },
                           child: Container(
                             height: 215.h,

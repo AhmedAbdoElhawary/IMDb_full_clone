@@ -25,7 +25,7 @@ abstract class FilmInfoApi {
   /// TODO if there is anything wrong add this in the end of bellow url:
   /// FullActor,FullCast,Posters,Images,Trailer,Ratings,Wikipedia,
 
-  @GET("Title/{apiKey}/{id}")
+  @GET("Title/{apiKey}/{id}/Images,Trailer,Ratings,")
   Future<FilmDetails> getFilmInfo(@Path() String id,
       {@Path() final String apiKey = apiKey});
 

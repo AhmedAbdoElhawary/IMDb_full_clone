@@ -1,33 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:imdb/helper/functions/network_exceptions.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/utility/constant.dart';
-import 'package:imdb/view_models/film/film_sub_details/film_sub_details.dart';
-import 'package:imdb/view_models/film/film_sub_details/film_sub_items.dart';
+import 'package:imdb/view_models/in_theaters/new_film_details.dart';
+import 'package:imdb/view_models/in_theaters/new_fim_items.dart';
+import 'package:imdb/views/bloc/cubit_result_state.dart';
+import 'package:imdb/views/bloc/new_films/new_films.dart';
+import 'package:imdb/views/common_widgets/custom_circulars_progress.dart';
 import 'package:imdb/views/common_widgets/film_sub_info_in_row.dart';
 import 'package:imdb/views/common_widgets/suggestion_filtered_container.dart';
 
-class FilmsFiltered extends StatelessWidget {
-  final FilmSubDetails? filmsDetails;
-  const FilmsFiltered({super.key, this.filmsDetails});
+class ComingSoonPage extends StatelessWidget {
+  const ComingSoonPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    int lengthOfItem = filmsDetails?.items?.length ?? 0;
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 56.h,
+        title: Text("Coming soon", style: getMediumStyle(fontSize: 22)),
+      ),
+      body: Center(
+        child: BlocBuilder<NewFilmsCubit, ResultState<NewFilmDetails>>(
+          bloc: NewFilmsCubit.get(context)..getComingSoon(),
+          buildWhen: (previous, current) => previous != current,
+          builder: (context, ResultState<NewFilmDetails> state) {
+            return state.when(
+              initial: () => const CustomCircularProgress(),
+              loading: () => const CustomCircularProgress(),
+              success: (NewFilmDetails data) =>
+                  FilmsFiltered(newFilmDetails: data),
+              error: (e) {
+                return Text(NetworkExceptions.getErrorMessage(e));
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class FilmsFiltered extends StatelessWidget {
+  final NewFilmDetails newFilmDetails;
+  const FilmsFiltered({super.key,required this.newFilmDetails});
+
+  @override
+  Widget build(BuildContext context) {
+    int lengthOfItem = newFilmDetails.items?.length ?? 0;
     return ListView.separated(
         itemBuilder: (context, index) {
-          FilmSubItems? filmItems = filmsDetails?.items?[index==0?index:index - 1];
-
-          return index == 0
-              ? _FilteredWidgets(lengthOfItem: lengthOfItem)
-              : FilmSubInfoInRow(
-                  id: filmItems?.id ?? "",
-                  imDbRating: filmItems?.imDbRating ?? "",
-                  imageUrl: filmItems?.image ?? "",
-                  title: filmItems?.title ?? "",
-                  year: filmItems?.year ?? "",
-                );
+          if (index == 0) {
+            return _FilteredWidgets(lengthOfItem: lengthOfItem);
+          } else {
+            NewFilmItems? newFilmItems = newFilmDetails.items?[index - 1];
+            return FilmSubInfoInRow(
+              id: newFilmItems?.id ?? "",
+              imDbRating: newFilmItems?.imDbRating ?? "",
+              imageUrl: newFilmItems?.image ?? "",
+              title: newFilmItems?.title ?? "",
+              year: newFilmItems?.year ?? "",
+              releaseDate: newFilmItems?.releaseState ?? "",
+              metacriticRating: newFilmItems?.metacriticRating ?? "",
+            );
+          }
         },
         separatorBuilder: (context, index) => index == 0
             ? const SizedBox()
