@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/utility/constant.dart';
-import 'package:imdb/views/common_widgets/basic_film_and_sub_info_in_row.dart';
+import 'package:imdb/views/common_widgets/film_sub_info_in_row.dart';
 import 'package:imdb/views/common_widgets/play_icon_with_time.dart';
 import 'package:imdb/views/pages/home/widgets/film_card.dart';
 
@@ -248,8 +248,7 @@ class _FilmSubInfoFolded extends StatelessWidget {
                   style: getNormalStyle(fontSize: 15, color: ColorManager.grey),
                 ),
                 const RSizedBox(height: horizontalPadding),
-                const BasicFilmAndSubInfoInRow(
-                    makTextWhite: true, paddingInAll: 0),
+                const FilmSubInfoInRow(id: "",makTextWhite: true, paddingInAll: 0),
                 const RSizedBox(height: horizontalPadding),
                 SizedBox(
                   height: 45.h,
