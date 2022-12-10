@@ -7,7 +7,7 @@ import 'package:imdb/helper/utility/constant.dart';
 import 'package:imdb/views/common_widgets/films_main_floating_container.dart';
 import 'package:imdb/views/common_widgets/floating_container.dart';
 import 'package:imdb/views/common_widgets/gold_title_of_main_card.dart';
-import 'package:imdb/views/pages/home/widgets/actor_birth_day_card.dart';
+import 'package:imdb/views/pages/home/widgets/actor_card.dart';
 import 'package:imdb/views/pages/personal/settings_page.dart';
 
 class PersonalPage extends StatelessWidget {
@@ -40,7 +40,7 @@ class PersonalPage extends StatelessWidget {
                 ],
               ),
               const RSizedBox(height: 10),
-              const FilmsMainCard("Your watchlist"),
+              const FilmsMainCard("Your watchlist",filmItems: []),
               const RSizedBox(height: 20),
               const _BornTodayMainCard(),
               const RSizedBox(height: 20),
@@ -75,7 +75,7 @@ class _BornTodayMainCard extends StatelessWidget {
                       padding: REdgeInsetsDirectional.only(
                           start: index == 0 ? horizontalPadding : 8,
                           end: index == 9 ? horizontalPadding : 0),
-                      child: const Center(child: ActorBirthdayCard()),
+                      child: const Center(child: ActorCard()),
                     ),
                 itemCount: 10),
           ),
