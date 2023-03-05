@@ -60,7 +60,7 @@ class FilmsFiltered extends StatelessWidget {
             return FilmSubInfoInRow(
               id: newFilmItems?.id ?? "",
               imDbRating: newFilmItems?.imDbRating ?? "",
-              imageUrl: newFilmItems?.image ?? "",
+              image: newFilmItems?.image ?? "",
               title: newFilmItems?.title ?? "",
               year: newFilmItems?.year ?? "",
               releaseDate: newFilmItems?.releaseState ?? "",

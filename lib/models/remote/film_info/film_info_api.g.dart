@@ -37,7 +37,7 @@ class _FilmInfoApi implements FilmInfoApi {
     )
             .compose(
               _dio.options,
-              'Title/${apiKey}/${id}',
+              'Title/${apiKey}/${id}/Images,Trailer,Ratings,',
               queryParameters: queryParameters,
               data: _data,
             )

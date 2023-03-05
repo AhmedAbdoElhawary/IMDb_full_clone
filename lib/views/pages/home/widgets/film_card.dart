@@ -4,27 +4,28 @@ import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/routes/route_app.dart';
 import 'package:imdb/views/common_widgets/box_shadows.dart';
-import 'package:imdb/views/pages/film_details/film_details_page.dart';
+import 'package:imdb/views/common_widgets/network_image_display.dart';
+import 'package:imdb/views/pages/details/film_details_page.dart';
 import 'package:imdb/views/pages/home/widgets/add_to_wach_list.dart';
 
 class FilmCard extends StatelessWidget {
+  final String id;
+  final String image;
+  final String imdbRating;
+  final String title;
+  final String year;
+  final String time;
+  final String category;
   const FilmCard({
     super.key,
-    this.imageUrl = "",
-    this.filmId = "",
+    this.image = imageUrl,
+    this.id = "",
     this.imdbRating = "",
     this.title = "",
     this.year = "",
     this.time = "",
     this.category = "",
   });
-  final String filmId;
-  final String imageUrl;
-  final String imdbRating;
-  final String title;
-  final String year;
-  final String time;
-  final String category;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class FilmCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Go(context).to(FilmDetailsPage(filmId: filmId));
+        Go(context).to(FilmDetailsPage(filmId: id));
       },
       child: Container(
         height: screenHeightOver3,
@@ -56,7 +57,7 @@ class FilmCard extends StatelessWidget {
                   SizedBox(
                     height: screenHeightOver3 / 1.72,
                     width: double.infinity,
-                    child: Image.network(imageUrl, fit: BoxFit.cover),
+                    child: NetworkImageDisplay(image, fit: BoxFit.cover),
                   ),
                   const Align(
                       alignment: Alignment.topLeft, child: AddToWatchList()),
@@ -67,7 +68,6 @@ class FilmCard extends StatelessWidget {
                   padding: EdgeInsets.all(horizontalPadding),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       if (imdbRating.isNotEmpty) ...[
                         Row(
@@ -116,7 +116,7 @@ class StaticImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(fit: BoxFit.cover, imageUrl);
+    return const NetworkImageDisplay(fit: BoxFit.cover, imageUrl);
   }
 }
 

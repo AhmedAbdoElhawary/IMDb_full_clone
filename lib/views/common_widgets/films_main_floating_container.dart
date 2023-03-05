@@ -60,8 +60,8 @@ class FilmsMainCard extends StatelessWidget {
                         end: index == 9 ? horizontalPadding : 0),
                     child: Center(
                         child: FilmCard(
-                      filmId: item?.id ?? "",
-                      imageUrl: item?.image ?? "",
+                      id: item?.id ?? "",
+                      image: item?.image ?? "",
                       imdbRating: item?.imDbRating ?? "",
                       title: item?.title ?? "",
                       time: item?.runtimeStr ?? "",
