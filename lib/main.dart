@@ -10,7 +10,6 @@ import 'package:imdb/views/my_app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await initializeDependencies();
   runApp(const MyApp());
 }

@@ -24,7 +24,7 @@ abstract class NetworkExceptions with _$NetworkExceptions {
 
   const factory NetworkExceptions.sendTimeout() = SendTimeout;
 
-  const factory NetworkExceptions.unprocessableEntity(String reason) = UnprocessableEntity;
+  const factory NetworkExceptions.unProcessableEntity(String reason) = UnprocessableEntity;
 
   const factory NetworkExceptions.conflict() = Conflict;
 
@@ -60,7 +60,7 @@ abstract class NetworkExceptions with _$NetworkExceptions {
       case 408:
         return const NetworkExceptions.requestTimeout();
       case 422:
-        return NetworkExceptions.unprocessableEntity(allErrors);
+        return NetworkExceptions.unProcessableEntity(allErrors);
       case 500:
         return const NetworkExceptions.internalServerError();
       case 503:

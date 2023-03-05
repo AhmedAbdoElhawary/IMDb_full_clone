@@ -22,7 +22,7 @@ Total : 82 files,  6912 codes, 144 comments, 716 blanks, all 7772 lines
 | [lib/helper/use_case/use_case.dart](/lib/helper/use_case/use_case.dart) | Dart | -23 | 0 | -6 | -29 |
 | [lib/helper/utility/constant.dart](/lib/helper/utility/constant.dart) | Dart | 1 | 0 | 1 | 2 |
 | [lib/helper/utility/injector.dart](/lib/helper/utility/injector.dart) | Dart | 57 | -8 | 10 | 59 |
-| [lib/helper/utility/private_keys.dart](/lib/helper/utility/private_keys.dart) | Dart | 1 | 0 | 1 | 2 |
+| [lib/helper/utility/private_keys.dart](/lib/helper/utility/private_key.dart) | Dart | 1 | 0 | 1 | 2 |
 | [lib/helper/widgets/multi_bloc_provider.dart](/lib/helper/widgets/multi_bloc_provider.dart) | Dart | -9 | -10 | -4 | -23 |
 | [lib/main.dart](/lib/main.dart) | Dart | 3 | 0 | 1 | 4 |
 | [lib/models/box_office.dart](/lib/models/box_office.dart) | Dart | 17 | 0 | 6 | 23 |

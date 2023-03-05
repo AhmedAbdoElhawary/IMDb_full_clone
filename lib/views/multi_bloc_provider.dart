@@ -6,6 +6,7 @@ import 'package:imdb/views/bloc/different_calls/different_calls_cubit.dart';
 import 'package:imdb/views/bloc/film_info/film_info_cubit.dart';
 import 'package:imdb/views/bloc/most_popular_films/most_popular_films_cubit.dart';
 import 'package:imdb/views/bloc/new_films/new_films.dart';
+import 'package:imdb/views/bloc/personal_info/personal_info_cubit.dart';
 import 'package:imdb/views/bloc/top_250_films/top250_films_cubit.dart';
 
 class MultiBlocs extends StatelessWidget {
@@ -31,8 +32,11 @@ class MultiBlocs extends StatelessWidget {
       BlocProvider<DifferentCallsCubit>(
         create: (context) => injector<DifferentCallsCubit>(),
       ),
-        BlocProvider<FilmInfoCubit>(
+      BlocProvider<FilmInfoCubit>(
         create: (context) => injector<FilmInfoCubit>(),
+      ),
+      BlocProvider<PersonalInfoCubit>(
+        create: (context) => injector<PersonalInfoCubit>(),
       ),
     ], child: materialApp);
   }

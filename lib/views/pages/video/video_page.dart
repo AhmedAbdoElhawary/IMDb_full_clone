@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
-import 'package:imdb/helper/routes/route_app.dart';
 import 'package:imdb/helper/utility/constant.dart';
 import 'package:imdb/views/common_widgets/box_shadows.dart';
 import 'package:imdb/views/common_widgets/floating_container.dart';
 import 'package:imdb/views/common_widgets/gold_title_of_main_card.dart';
 import 'package:imdb/views/common_widgets/suggestion_filtered_container.dart';
-import 'package:imdb/views/pages/film_details/film_details_page.dart';
 import 'package:imdb/views/pages/home/widgets/add_to_wach_list.dart';
 import 'package:imdb/views/pages/home/widgets/film_card.dart';
 
@@ -42,7 +40,6 @@ class _VideosCard extends StatelessWidget {
 
     return FloatingContainer(
       height: screenHeight / 2.2,
-      withPadding: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

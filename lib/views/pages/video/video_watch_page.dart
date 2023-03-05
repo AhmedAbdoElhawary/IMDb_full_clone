@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/utility/constant.dart';
 import 'package:imdb/views/common_widgets/film_sub_info_in_row.dart';
+import 'package:imdb/views/common_widgets/network_image_display.dart';
 import 'package:imdb/views/common_widgets/play_icon_with_time.dart';
 import 'package:imdb/views/pages/home/widgets/film_card.dart';
 
@@ -110,10 +112,8 @@ class _VideosOfPlayList extends StatelessWidget {
                       ).createShader(bounds);
                     },
                     blendMode: BlendMode.dstOut,
-                    child: Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                    ),
+                    child:
+                        const NetworkImageDisplay(imageUrl, fit: BoxFit.cover),
                   ),
                 ),
                 Padding(
@@ -248,7 +248,8 @@ class _FilmSubInfoFolded extends StatelessWidget {
                   style: getNormalStyle(fontSize: 15, color: ColorManager.grey),
                 ),
                 const RSizedBox(height: horizontalPadding),
-                const FilmSubInfoInRow(id: "",makTextWhite: true, paddingInAll: 0),
+                const FilmSubInfoInRow(
+                    id: "", makTextWhite: true, paddingInAll: 0),
                 const RSizedBox(height: horizontalPadding),
                 SizedBox(
                   height: 45.h,
@@ -260,7 +261,8 @@ class _FilmSubInfoFolded extends StatelessWidget {
                                 const CircleAvatar(
                                   radius: 25,
                                   backgroundColor: ColorManager.darkGray,
-                                  backgroundImage: NetworkImage(imageUrl),
+                                  backgroundImage:
+                                      CachedNetworkImageProvider(imageUrl),
                                 ),
                                 const RSizedBox(width: 5),
                                 Text(

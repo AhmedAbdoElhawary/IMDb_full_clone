@@ -5,7 +5,6 @@ import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/routes/route_app.dart';
 import 'package:imdb/helper/utility/constant.dart';
 import 'package:imdb/views/common_widgets/box_shadows.dart';
-import 'package:imdb/views/pages/home/widgets/film_card.dart';
 import 'package:imdb/views/pages/search/main_pages/search_result_page.dart';
 import 'package:imdb/views/pages/search/sub_pages/coming_soon_page.dart';
 import 'package:imdb/views/pages/search/sub_pages/most_popular_movies_page.dart';
@@ -41,7 +40,7 @@ class SearchPage extends StatelessWidget {
                 runSpacing: 20,
                 children: [
                   ...List.generate(
-                      10,
+                      movieCards.length,
                       (index) =>
                           _ThumbnailTrailerCard(card: movieCards[index])),
                 ],
@@ -50,43 +49,17 @@ class SearchPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: _MoviesText(icon: Icons.tv, title: "Streaming & TV"),
               ),
-              // Wrap(
-              //   crossAxisAlignment: WrapCrossAlignment.start,
-              //   spacing: 25,
-              //   runSpacing: 20,
-              //   children: [
-              //     ...List.generate(7,
-              //         (index) => _ThumbnailTrailerCard(title: titles()[index])),
-              //   ],
-              // ),
-              // const Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: 20),
-              //   child: _MoviesText(icon: Icons.person, title: "Celebs"),
-              // ),
-              // Wrap(
-              //   crossAxisAlignment: WrapCrossAlignment.start,
-              //   spacing: 25,
-              //   runSpacing: 20,
-              //   children: [
-              //     ...List.generate(3,
-              //         (index) => _ThumbnailTrailerCard(title: titles()[index])),
-              //   ],
-              // ),
-              // const Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: 20),
-              //   child: _MoviesText(
-              //       icon: Icons.stars_rounded, title: "Awards & Events"),
-              // ),
-              // Wrap(
-              //   crossAxisAlignment: WrapCrossAlignment.start,
-              //   spacing: 25,
-              //   runSpacing: 20,
-              //   children: [
-              //     ...List.generate(3,
-              //         (index) => _ThumbnailTrailerCard(title: titles()[index])),
-              //   ],
-              // ),
-              // const RSizedBox(height: 20),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.start,
+                spacing: 25,
+                runSpacing: 20,
+                children: [
+                  ...List.generate(
+                      seriesCards.length,
+                      (index) =>
+                          _ThumbnailTrailerCard(card: seriesCards[index])),
+                ],
+              ),
             ],
           ),
         ),
@@ -215,13 +188,7 @@ class _ThumbnailTrailerCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: double.infinity,
-              height: 100.h,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(7.r),
-                  child: const StaticImage()),
-            ),
+            SizedBox(width: double.infinity, height: 100.h),
             SizedBox(
               height: 48.h,
               child: Align(
@@ -243,14 +210,24 @@ class _ThumbnailTrailerCard extends StatelessWidget {
 }
 
 List<Map<String, dynamic>> movieCards = [
-  {"title": "Popular movie trailers", "page": const Top250MoviesPage()},
-  {"title": "Recent movie trailers", "page": const Top250MoviesPage()},
-  {"title": "Movie showtimes", "page": const Top250MoviesPage()},
+  {"title": "Popular movie trailers", "page": const Top250FilmsPage()},
+  {"title": "Recent movie trailers", "page": const Top250FilmsPage()},
+  {"title": "Movie showtimes", "page": const Top250FilmsPage()},
   {"title": "Top box office", "page": const TopBoxOfficePage()},
-  {"title": "Top 250 movies", "page": const Top250MoviesPage()},
+  {"title": "Top 250 movies", "page": const Top250FilmsPage()},
   {"title": "Most popular movies", "page": const MostPopularMoviesPage()},
   {"title": "Coming soon to theaters", "page": const ComingSoonPage()},
-  {"title": "Most popular movies by genre", "page": const Top250MoviesPage()},
-  {"title": "Best picture winners", "page": const Top250MoviesPage()},
-  {"title": "Movie news", "page": const Top250MoviesPage()},
+  {"title": "Most popular movies by genre", "page": const Top250FilmsPage()},
+  {"title": "Best picture winners", "page": const Top250FilmsPage()},
+  {"title": "Movie news", "page": const Top250FilmsPage()},
+];
+
+List<Map<String, dynamic>> seriesCards = [
+  {"title": "Popular TV trailers", "page": const Top250FilmsPage(isThatMovie: false)},
+  {"title": "Recent TV trailers", "page": const Top250FilmsPage(isThatMovie: false)},
+  {"title": "Top 250 TV shows", "page": const Top250FilmsPage(isThatMovie: false)},
+  {"title": "Most popular TV shows", "page": const MostPopularMoviesPage(isThatMovie: false)},
+  {"title": "Most popular movies by genre", "page": const Top250FilmsPage(isThatMovie: false)},
+  {"title": "Watch soon at home", "page": const Top250FilmsPage(isThatMovie: false)},
+  {"title": "TV news", "page": const Top250FilmsPage(isThatMovie: false)},
 ];

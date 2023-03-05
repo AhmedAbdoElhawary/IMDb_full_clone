@@ -14,7 +14,7 @@ import 'package:imdb/views/common_widgets/custom_circulars_progress.dart';
 import 'package:imdb/views/common_widgets/films_main_floating_container.dart';
 import 'package:imdb/views/common_widgets/floating_container.dart';
 import 'package:imdb/views/common_widgets/gold_title_of_main_card.dart';
-import 'package:imdb/views/pages/film_details/film_details_page.dart';
+import 'package:imdb/views/pages/details/film_details_page.dart';
 import 'package:imdb/views/pages/home/widgets/actor_card.dart';
 import 'package:imdb/views/pages/home/widgets/add_to_wach_list.dart';
 import 'package:imdb/views/pages/home/widgets/film_card.dart';
@@ -37,31 +37,7 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: screenHeightOver3 * 1.16,
-                width: double.infinity,
-                child: PageView.builder(
-                  itemBuilder: (context, index) => SizedBox(
-                    height: screenHeightOver3,
-                    child: Stack(
-                      children: [
-                        Container(
-                          color: ColorManager.purple,
-                          height: screenHeightOver3 / 1.1,
-                          child: const SizedBox(
-                            width: double.infinity,
-                            child: StaticImage(),
-                          ),
-                        ),
-                        Positioned(
-                            height: screenHeightOver3 * 1.08,
-                            child: const _PosterAndSubInfo()),
-                      ],
-                    ),
-                  ),
-                  itemCount: 5,
-                ),
-              ),
+              _DynamicMovedPageView(screenHeightOver3: screenHeightOver3),
               const _MainTitle("Featured today"),
               FloatingContainer(
                 height: screenHeightOver3 / 0.94,
@@ -72,18 +48,15 @@ class HomePage extends StatelessWidget {
               const RSizedBox(height: _verticalPadding),
               // const FilmsMainCard("Fan favorites"),
               const _MainTitle("Explore movies and TV shows"),
-              _InTheaters(false,
-                  bloc: NewFilmsCubit.get(context)..getInTheaters()),
+              const _InTheaters(),
               const RSizedBox(height: _verticalPadding),
-              _InTheaters(true,
-                  bloc: NewFilmsCubit.get(context)..getComingSoon()),
+              const _InTheaters(),
               const RSizedBox(height: _verticalPadding),
               const _TopBoxOfficeCard(),
               const RSizedBox(height: _verticalPadding),
-              _InTheaters(true,
-                  bloc: NewFilmsCubit.get(context)..getComingSoon()),
+              const _ComingSoon(),
               const _BornTodayMainCard(),
-              const RSizedBox(height: _verticalPadding * 25),
+              const RSizedBox(height: _verticalPadding),
             ],
           ),
         ),
@@ -92,25 +65,79 @@ class HomePage extends StatelessWidget {
   }
 }
 
+class _DynamicMovedPageView extends StatelessWidget {
+  const _DynamicMovedPageView({required this.screenHeightOver3});
+
+  final double screenHeightOver3;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: screenHeightOver3 * 1.16,
+      width: double.infinity,
+      child: PageView.builder(
+        itemBuilder: (context, index) => SizedBox(
+          height: screenHeightOver3,
+          child: Stack(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: screenHeightOver3 / 1.1,
+                child: const StaticImage(),
+              ),
+              Positioned(
+                  height: screenHeightOver3 * 1.08,
+                  child: const _PosterAndSubInfo()),
+            ],
+          ),
+        ),
+        itemCount: 5,
+      ),
+    );
+  }
+}
+
 class _InTheaters extends StatelessWidget {
-  final bool isThatComingSoon;
-  final NewFilmsCubit bloc;
-  const _InTheaters(this.isThatComingSoon, {required this.bloc});
+  const _InTheaters();
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: BlocBuilder<NewFilmsCubit, ResultState<NewFilmDetails>>(
-        bloc: bloc,
+        bloc: NewFilmsCubit.get(context)..getInTheaters(),
         buildWhen: (previous, current) => previous != current,
         builder: (context, ResultState<NewFilmDetails> state) {
           return state.when(
             initial: () => const CustomCircularProgress(),
             loading: () => const CustomCircularProgress(),
             success: (NewFilmDetails data) {
-              return FilmsMainCard(
-                  isThatComingSoon ? "Coming soon" : "In theaters",
-                  filmItems: data.items);
+              return FilmsMainCard("In theaters", filmItems: data.items);
+            },
+            error: (e) {
+              return Text(NetworkExceptions.getErrorMessage(e));
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ComingSoon extends StatelessWidget {
+  const _ComingSoon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: BlocBuilder<NewFilmsCubit, ResultState<NewFilmDetails>>(
+        bloc: NewFilmsCubit.get(context)..getComingSoon(),
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, ResultState<NewFilmDetails> state) {
+          return state.when(
+            initial: () => const CustomCircularProgress(),
+            loading: () => const CustomCircularProgress(),
+            success: (NewFilmDetails data) {
+              return FilmsMainCard("Coming soon", filmItems: data.items);
             },
             error: (e) {
               return Text(NetworkExceptions.getErrorMessage(e));
@@ -293,8 +320,7 @@ class _PosterAndSubInfo extends StatelessWidget {
           Container(
             height: 147.h,
             width: 100.w,
-            decoration:
-                BoxDecoration(color: ColorManager.redAccent, boxShadow: [
+            decoration: BoxDecoration(boxShadow: [
               BoxShadow(
                 color: ColorManager.grey.withOpacity(.55),
                 spreadRadius: 1.5,

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:imdb/helper/utility/constant.dart';
-import 'package:imdb/helper/utility/private_keys.dart';
+import 'package:imdb/helper/utility/private_key.dart';
 import 'package:imdb/view_models/youtube_trailer/youtube_trailer_details.dart';
 import 'package:retrofit/retrofit.dart';
 
