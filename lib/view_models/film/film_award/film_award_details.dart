@@ -33,6 +33,7 @@ class FilmAwardDetails {
       required this.items,
       required this.awardsHtml,
       required this.errorMessage});
+      
   factory FilmAwardDetails.fromJson(Map<String, dynamic> json) =>
       _$FilmAwardDetailsFromJson(json);
 

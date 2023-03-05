@@ -55,7 +55,7 @@ Total : 139 files,  12131 codes, 552 comments, 1374 blanks, all 14057 lines
 | [lib/helper/utility/app_prefs.dart](/lib/helper/utility/app_prefs.dart) | Dart | 13 | 0 | 7 | 20 |
 | [lib/helper/utility/constant.dart](/lib/helper/utility/constant.dart) | Dart | 3 | 0 | 1 | 4 |
 | [lib/helper/utility/injector.dart](/lib/helper/utility/injector.dart) | Dart | 67 | 6 | 16 | 89 |
-| [lib/helper/utility/private_keys.dart](/lib/helper/utility/private_keys.dart) | Dart | 1 | 0 | 1 | 2 |
+| [lib/helper/utility/private_keys.dart](/lib/helper/utility/private_key.dart) | Dart | 1 | 0 | 1 | 2 |
 | [lib/main.dart](/lib/main.dart) | Dart | 8 | 0 | 3 | 11 |
 | [lib/models/box_office.dart](/lib/models/box_office.dart) | Dart | 17 | 0 | 6 | 23 |
 | [lib/models/box_office.g.dart](/lib/models/box_office.g.dart) | Dart | 74 | 5 | 10 | 89 |

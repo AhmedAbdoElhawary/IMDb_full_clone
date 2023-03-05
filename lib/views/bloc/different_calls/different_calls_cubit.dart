@@ -9,6 +9,7 @@ import 'package:imdb/views/bloc/cubit_result_state.dart';
 class DifferentCallsCubit extends Cubit<ResultState<YoutubeTrailerDetails>> {
   final DifferentCallsRepo _differentCallsRepo;
   DifferentCallsCubit(this._differentCallsRepo) : super(const initial());
+
   static DifferentCallsCubit get(BuildContext context) =>
       BlocProvider.of(context);
 

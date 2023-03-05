@@ -9,7 +9,8 @@ import 'package:imdb/view_models/box_office/box_office_details.dart';
 import 'package:imdb/view_models/box_office/box_office_items.dart';
 import 'package:imdb/views/bloc/box_office/box_office_cubit.dart';
 import 'package:imdb/views/common_widgets/custom_circulars_progress.dart';
-import 'package:imdb/views/pages/film_details/film_details_page.dart';
+import 'package:imdb/views/common_widgets/network_image_display.dart';
+import 'package:imdb/views/pages/details/film_details_page.dart';
 import 'package:imdb/views/pages/home/widgets/add_to_wach_list.dart';
 
 class TopBoxOfficePage extends StatelessWidget {
@@ -111,8 +112,8 @@ class _BoxOfficeCard extends StatelessWidget {
       padding: REdgeInsets.all(10),
       child: GestureDetector(
         onTap: () {
-          String id=boxOfficeItems?.id ?? "";
-          Go(context).to( FilmDetailsPage(filmId: id));
+          String id = boxOfficeItems?.id ?? "";
+          Go(context).to(FilmDetailsPage(filmId: id));
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -125,7 +126,7 @@ class _BoxOfficeCard extends StatelessWidget {
                   width: 90.w,
                   child: boxOfficeItems?.image == null
                       ? null
-                      : Image.network(
+                      : NetworkImageDisplay(
                           fit: BoxFit.cover, boxOfficeItems!.image!),
                 ),
                 const Align(

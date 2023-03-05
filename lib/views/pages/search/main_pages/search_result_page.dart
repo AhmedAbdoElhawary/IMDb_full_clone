@@ -5,6 +5,7 @@ import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/routes/route_app.dart';
 import 'package:imdb/helper/utility/constant.dart';
 import 'package:imdb/views/common_widgets/custom_elevated_button.dart';
+import 'package:imdb/views/common_widgets/network_image_display.dart';
 import 'package:imdb/views/pages/search/widgets/search_text_field.dart';
 
 class SearchResultPage extends StatelessWidget {
@@ -231,9 +232,9 @@ class _RecentSearchesTap extends StatelessWidget {
                       SizedBox(
                         height: 85.h,
                         width: 55.w,
-                        child: Image.network(
+                        child: const NetworkImageDisplay(
                           "https://cdn.britannica.com/65/227665-050-D74A477E/American-actor-Leonardo-DiCaprio-2016.jpg",
-                          fit: BoxFit.cover,
+                          fit: BoxFit.cover
                         ),
                       ),
                       const RSizedBox(width: 10),

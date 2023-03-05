@@ -3,13 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
 import 'package:imdb/helper/routes/route_app.dart';
-import 'package:imdb/views/pages/film_details/film_details_page.dart';
+import 'package:imdb/views/common_widgets/network_image_display.dart';
+import 'package:imdb/views/pages/details/film_details_page.dart';
 import 'package:imdb/views/pages/home/widgets/add_to_wach_list.dart';
+import 'package:imdb/views/pages/home/widgets/film_card.dart';
 
 class FilmSubInfoInRow extends StatelessWidget {
   final bool makTextWhite;
   final double paddingInAll;
-  final String imageUrl;
+  final String image;
   final String rankUpDown;
   final String rank;
   final String title;
@@ -24,7 +26,7 @@ class FilmSubInfoInRow extends StatelessWidget {
       this.makTextWhite = false,
       this.imDbRating = "",
       this.metacriticRating = "",
-      this.imageUrl = "",
+      this.image = imageUrl,
       this.rank = "",
       this.rankUpDown = "",
       this.releaseDate = "",
@@ -40,7 +42,7 @@ class FilmSubInfoInRow extends StatelessWidget {
       padding: REdgeInsets.all(paddingInAll),
       child: InkWell(
         onTap: () {
-          Go(context).to( FilmDetailsPage(filmId: id));
+          Go(context).to(FilmDetailsPage(filmId: id));
         },
         child: Container(
           color: ColorManager.transparent,
@@ -54,9 +56,9 @@ class FilmSubInfoInRow extends StatelessWidget {
                   SizedBox(
                     height: 130.h,
                     width: 90.w,
-                    child: imageUrl.isEmpty
+                    child: image.isEmpty
                         ? null
-                        : Image.network(fit: BoxFit.cover, imageUrl),
+                        : NetworkImageDisplay(fit: BoxFit.cover, image),
                   ),
                   const Align(
                       alignment: Alignment.topLeft,

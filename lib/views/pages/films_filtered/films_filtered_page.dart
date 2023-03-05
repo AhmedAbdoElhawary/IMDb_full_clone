@@ -17,14 +17,15 @@ class FilmsFiltered extends StatelessWidget {
     int lengthOfItem = filmsDetails?.items?.length ?? 0;
     return ListView.separated(
         itemBuilder: (context, index) {
-          FilmSubItems? filmItems = filmsDetails?.items?[index==0?index:index - 1];
+          FilmSubItems? filmItems =
+              filmsDetails?.items?[index == 0 ? index : index - 1];
 
           return index == 0
               ? _FilteredWidgets(lengthOfItem: lengthOfItem)
               : FilmSubInfoInRow(
                   id: filmItems?.id ?? "",
                   imDbRating: filmItems?.imDbRating ?? "",
-                  imageUrl: filmItems?.image ?? "",
+                  image: filmItems?.image ?? "",
                   title: filmItems?.title ?? "",
                   year: filmItems?.year ?? "",
                 );

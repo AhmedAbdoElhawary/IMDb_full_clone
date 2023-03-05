@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imdb/helper/resources/color_manager.dart';
 import 'package:imdb/helper/resources/styles_manager.dart';
+import 'package:imdb/helper/utility/constant.dart';
 
-const double _horizontalPadding = 15;
 
 class GoldTitleOfMainCard extends StatelessWidget {
   final bool withoutVerticalPadding;
@@ -24,8 +24,8 @@ class GoldTitleOfMainCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: REdgeInsetsDirectional.only(
-        start: _horizontalPadding,
-        end: _horizontalPadding,
+        start: horizontalPadding,
+        end: horizontalPadding,
         top: 10.h,
         bottom: withoutVerticalPadding ? 0 : 10.h,
       ),
